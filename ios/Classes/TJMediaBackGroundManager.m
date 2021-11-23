@@ -128,8 +128,8 @@ static TJMediaBackGroundManager *_shareInstance = nil;
                         }
                         return coverImage;
                     }];
-                    [songInfo setObject: nowPlayingInfo.title forKey:MPMediaItemPropertyTitle];
-                    [songInfo setObject: nowPlayingInfo.auther forKey:MPMediaItemPropertyArtist];
+                    [songInfo setObject: nowPlayingInfo.title.length?nowPlayingInfo.title:@"" forKey:MPMediaItemPropertyTitle];
+                    [songInfo setObject: nowPlayingInfo.auther.length?nowPlayingInfo.auther:@"" forKey:MPMediaItemPropertyArtist];
                     [songInfo setObject: artwork forKey:MPMediaItemPropertyArtwork];
                     [songInfo setObject:[NSNumber numberWithDouble:nowPlayingInfo.playbackDuration] forKey:MPMediaItemPropertyPlaybackDuration];
                     //设置已经播放时长
@@ -148,8 +148,8 @@ static TJMediaBackGroundManager *_shareInstance = nil;
                 }
                 return coverImage;
             }];
-            [songInfo setObject: nowPlayingInfo.title forKey:MPMediaItemPropertyTitle];
-            [songInfo setObject: nowPlayingInfo.auther forKey:MPMediaItemPropertyArtist];
+            [songInfo setObject: nowPlayingInfo.title.length?nowPlayingInfo.title:@"" forKey:MPMediaItemPropertyTitle];
+            [songInfo setObject: nowPlayingInfo.auther.length?nowPlayingInfo.auther:@"" forKey:MPMediaItemPropertyArtist];
             [songInfo setObject: artwork forKey:MPMediaItemPropertyArtwork ];
             [songInfo setObject:[NSNumber numberWithDouble:nowPlayingInfo.playbackDuration] forKey:MPMediaItemPropertyPlaybackDuration];
             //设置已经播放时长
