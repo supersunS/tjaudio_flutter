@@ -15,9 +15,10 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  s.resources = ['Assets/*.png']
-  s.dependency 'Flutter'
   s.platform = :ios, '10.0'
+  s.dependency 'Flutter'
+  s.dependency 'TJAudioPlay'
+  
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
