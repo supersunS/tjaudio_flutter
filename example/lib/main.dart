@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:tjaudio_flutter/TJAudioPlayViewManager.dart';
+import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 import 'package:tjaudio_flutter/tjaudio_flutter.dart';
 
 void main() {
@@ -54,28 +56,26 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('audioPlay Demo'),
         ),
-        body: Center(
-          child: MaterialButton(
-            color: Colors.orange,
-            height: 100,
-            minWidth: 100,
-            textColor: Colors.white,
-            child: Text("播放"),
-            onPressed: (){
-              TjaudioFlutter.openBackGround(true);
-              Map model = {"mediaId":"1",
-                "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
-                "auther":"AudioPlayDemo",
-                "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"};
-              List source = [model];
-              TjaudioFlutter.audioSourceData(source);
-              TjaudioFlutter.show();
-              TjaudioFlutter.playWithModel(model);
-              // print("播放操作");
-            },
+        body:Center(
+          child: Container(
+            child: TJAudioPlayView(),
           ),
         ),
       ),
     );
   }
 }
+
+
+/*
+var model = TJMediaBackGroundModel.mapToModel(
+    { "mediaId":"1",
+      "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
+      "auther":"AudioPlayDemo",
+      "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"}
+);
+TJAudioPlayViewManager.openBackGround(true);
+TJAudioPlayViewManager.audioSourceData([model]);
+TJAudioPlayViewManager.show();
+TJAudioPlayViewManager.playWithModel(model);
+ */
