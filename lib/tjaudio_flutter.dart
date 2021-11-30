@@ -1,13 +1,17 @@
 
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 
 
 class TjaudioFlutter {
   static const MethodChannel _channel = MethodChannel('com.flutterplugin.tj/flutter_audioPlay');
+
+  static const BasicMessageChannel _messageChannel = BasicMessageChannel('com.flutterplugin.tj/flutter_audioPlay_message',StandardMessageCodec());
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -41,6 +45,12 @@ class TjaudioFlutter {
       result.add(TJMediaBackGroundModel.mapToModel(res[i]));
     }
     return result;
+  }
+
+  static Future<Uint8List> imageName(String imageName) async{
+    Map map = (await  _messageChannel.send({"methode":"imageName","arguments":imageName})) as Map;
+    Uint8List bodyBytes = map['image'] as Uint8List;
+    return bodyBytes;
   }
 }
 

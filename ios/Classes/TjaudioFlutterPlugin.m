@@ -10,14 +10,38 @@
 #import "TJAudioPlayViewManger.h"
 
 static NSString *const CHANNEL_NAME = @"com.flutterplugin.tj/flutter_audioPlay";
+static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_audioPlay_message";
 
 @implementation TjaudioFlutterPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
     FlutterMethodChannel *channel =
-        [FlutterMethodChannel methodChannelWithName:CHANNEL_NAME
-                                    binaryMessenger:[registrar messenger]];
+    [FlutterMethodChannel methodChannelWithName:CHANNEL_NAME
+                                binaryMessenger:[registrar messenger]];
     TjaudioFlutterPlugin *instance = [TjaudioFlutterPlugin new];
     [registrar addMethodCallDelegate:instance channel:channel];
+    
+    FlutterBasicMessageChannel *messagechannel = [FlutterBasicMessageChannel messageChannelWithName:CHANNEL_NAME_message binaryMessenger:[registrar messenger]];
+    [messagechannel setMessageHandler:^(NSDictionary * _Nullable message, FlutterReply  _Nonnull callback) {
+        NSString *method = [message objectForKey:@"methode"];
+        id arguments = [message objectForKey:@"arguments"];
+        NSLog(@"~~~~method~~~~%@",method);
+        NSLog(@"~~~~arguments~~~~~%@",arguments);
+        
+        
+        if ([method isEqualToString:@"imageName"]){
+            if([arguments isKindOfClass:[NSString class]]){
+                UIImage *image = [TJAudioPlayManager tj_imageNamed:arguments];
+                if(image){
+                    NSData *imageData=UIImagePNGRepresentation(image);
+                    callback(@{@"image":imageData});
+                }
+                
+            }
+        }
+        
+    }];
+    
+    
 }
 
 -(void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result{

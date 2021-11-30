@@ -17,7 +17,8 @@ A new flutter plugin project.
   s.public_header_files = 'Classes/**/*.h'
   s.platform = :ios, '10.0'
   s.dependency 'Flutter'
-  s.dependency 'TJAudioPlay'
+  s.dependency 'StreamingKit'
+  #s.dependency 'TJAudioPlay'
   
 
   # Flutter.framework does not contain a i386 slice.
