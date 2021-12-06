@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:tjaudio_flutter/TJAudioPlayViewManager.dart';
-import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
+import 'package:tjaudio_flutter/TJAudioPlayView.dart';
 import 'package:tjaudio_flutter/tjaudio_flutter.dart';
 
 void main() {
