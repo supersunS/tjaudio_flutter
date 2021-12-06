@@ -1,3 +1,4 @@
+import 'dart:convert' as convert;
 class TJMediaBackGroundModel{
   //资源图片地址
   var coverUrl = '';
@@ -66,16 +67,23 @@ class TJMediaBackGroundModel{
 
   Map toMap(){
     return {
-      'coverUrl':coverUrl,
-      'auther':auther,
-      'title':title,
-      'memo':memo,
-      'playbackTime':playbackTime,
-      'playbackDuration':playbackDuration,
-      'mediaUrl':mediaUrl,
-      'mediaLocalPath':mediaLocalPath,
-      'invalidMedia':invalidMedia,
-      'mediaId':mediaId,
+      'coverUrl':coverUrl != null?coverUrl:"",
+      'auther':auther != null?auther:"",
+      'title':title != null?title:"",
+      'memo':memo != null?memo:"",
+      'playbackTime':playbackTime != null?playbackTime:0.0,
+      'playbackDuration':playbackDuration != null?playbackDuration:0.0,
+      'mediaUrl':mediaUrl != null?mediaUrl:"",
+      'mediaLocalPath':mediaLocalPath != null?mediaLocalPath:"",
+      'invalidMedia':invalidMedia != null?true:"",
+      'mediaId':mediaId != null?mediaId:"",
     };
+  }
+
+  String toJsonString() {
+    // TODO: implement toString
+    Map tempMap = this.toMap();
+    String jsonString = convert.jsonEncode(tempMap);
+    return jsonString;
   }
 }

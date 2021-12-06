@@ -9,37 +9,55 @@ import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 
 
 class TjaudioFlutter {
-  static const MethodChannel _channel = MethodChannel('com.flutterplugin.tj/flutter_audioPlay');
+  static late ValueChanged _audioPlayStateChangeBlock;
+  static late ValueChanged _progressBlock;
 
   static const BasicMessageChannel _messageChannel = BasicMessageChannel('com.flutterplugin.tj/flutter_audioPlay_message',StandardMessageCodec());
+  static const EventChannel _eventChannel = EventChannel("com.flutterplugin.tj/flutter_audioPlay");
+  static late StreamSubscription _streamSubscription;
 
   static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
+    final String? version = await _messageChannel.send({"methode":"getPlatformVersion"});
+
     return version;
   }
 
   /// default NO
   static void openBackGround(bool openBackGround){
-    _channel.invokeMethod('openBackGround',openBackGround);
+    _messageChannel.send({"methode":"openBackGround","arguments":openBackGround});
   }
 
   ///必须先设置资源再执行 show ，不然 会造成监听错误
   static Future<bool> audioSourceData(List<TJMediaBackGroundModel> dataArray) async{
-    var result = await _channel.invokeListMethod('audioSourceData',TJMediaBackGroundModel.toMapList(dataArray));
+    var result = await _messageChannel.send({"methode":"audioSourceData","arguments":TJMediaBackGroundModel.toMapList(dataArray)});
+
     return result as bool;
   }
 
   static void show(){
-    _channel.invokeListMethod("show");
+    _messageChannel.send({"methode":"show"});
   }
 
   static Future<bool> playWithModel(TJMediaBackGroundModel model) async{
-    var result = await _channel.invokeListMethod('playWithModel',model.toMap());
-    return result as bool;
+    Map result = await _messageChannel.send({"methode":"playWithModel","arguments":model.toJsonString()}) as Map;
+    return result["result"] as bool;
   }
 
+
+  static void pause(){
+    var result = _messageChannel.send({"methode":"pause"});
+  }
+
+  static void resume(){
+    var result = _messageChannel.send({"methode":"resume"});
+  }
+
+
+
+
   static Future<List<TJMediaBackGroundModel>> getAudioSourceData() async{
-    List res = await _channel.invokeListMethod('getAudioSourceData') as List;
+    List res = await _messageChannel.send({"methode":"getAudioSourceData"}) as List;
+
     List <TJMediaBackGroundModel> result = <TJMediaBackGroundModel>[];
     for(var i =0;i<res.length;i++){
       result.add(TJMediaBackGroundModel.mapToModel(res[i]));
@@ -51,6 +69,33 @@ class TjaudioFlutter {
     Map map = (await  _messageChannel.send({"methode":"imageName","arguments":imageName})) as Map;
     Uint8List bodyBytes = map['image'] as Uint8List;
     return bodyBytes;
+  }
+
+  static Future<bool> getAudioIsPlaying() async {
+    Map result = await _messageChannel.send({"methode":"getAudioIsPlaying"}) as Map;
+    return result["result"] as bool;
+  }
+
+  static void setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,ValueChanged progressBlock){
+     _messageChannel.send({"methode":"setAudioPlayStateChangeListener"});
+     _audioPlayStateChangeBlock = audioPlayStateChangeBlock;
+     _progressBlock = progressBlock;
+  }
+
+  static void setMessageHandler(){
+    _streamSubscription = _eventChannel.receiveBroadcastStream().
+    listen((dynamic event) {
+        Map result = event as Map;
+        if(result.containsKey("audioState")){
+          _audioPlayStateChangeBlock(result["audioState"]);
+        }else if(result.containsKey("progress")){
+          _progressBlock(result["progress"]);
+          }
+        },
+        onError: (dynamic error) {
+          print('Received error: ${error.message}');
+        },
+        cancelOnError: true);
   }
 }
 

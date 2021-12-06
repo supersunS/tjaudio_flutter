@@ -8,6 +8,12 @@ import 'package:tjaudio_flutter/tjaudio_flutter.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 
 class TJAudioPlayViewManager {
+
+  List <TJMediaBackGroundModel> currentAudioSourceData = [];
+  List <TJMediaBackGroundModel> cacheNewAudioSourceData = [];
+
+  bool isShow = true;
+
   TJAudioPlayViewManager._privateConstructor();
 
   static final TJAudioPlayViewManager _instance =
@@ -27,7 +33,7 @@ class TJAudioPlayViewManager {
   }
 
   void _show() {
-    TjaudioFlutter.show();
+     this.isShow = true;
   }
 
   Future<bool> _playWithModel(TJMediaBackGroundModel model) async {
@@ -40,6 +46,27 @@ class TJAudioPlayViewManager {
 
   Future<Uint8List> _imageName(String imageName) async {
     return TjaudioFlutter.imageName(imageName);
+  }
+
+  void _setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,ValueChanged progressBlock) async{
+    TjaudioFlutter.setAudioPlayStateChangeListener(audioPlayStateChangeBlock, progressBlock);
+  }
+
+  void _setMessageHandler() {
+    TjaudioFlutter.setMessageHandler();
+  }
+
+
+  void _pause(){
+    TjaudioFlutter.pause();
+  }
+
+  void _resume(){
+    TjaudioFlutter.resume();
+  }
+
+  Future<bool> _getAudioIsPlaying() async {
+    return TjaudioFlutter.getAudioIsPlaying();
   }
 
   //=====================================================================================
@@ -70,16 +97,37 @@ class TJAudioPlayViewManager {
   static Future<Uint8List> imageName(String imageName) async {
     return TJAudioPlayViewManager._instance._imageName(imageName);
   }
+
+
+  static void pause(){
+    TJAudioPlayViewManager._instance._pause();
+  }
+
+  static void resume(){
+    TJAudioPlayViewManager._instance._resume();
+  }
+
+  static Future<bool> getAudioIsPlaying() async {
+    return TJAudioPlayViewManager._instance._getAudioIsPlaying();
+  }
+
+  static void setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,ValueChanged progressBlock) async{
+    TJAudioPlayViewManager._instance._setAudioPlayStateChangeListener(audioPlayStateChangeBlock, progressBlock);
+  }
+
+  static void setMessageHandler() {
+    TJAudioPlayViewManager._instance._setMessageHandler();
+  }
+
 }
 
 class _TJAudioPlayView extends State<TJAudioPlayView>
     with SingleTickerProviderStateMixin {
 
-  bool isShow = true;
-
   final double kBottomPadding = 88.0; //距顶部的偏移
   final double kDefaultWidth = 48.0; //距底部
   final double kDefaultMAXWidth = 200.0; //距底部
+  bool isOpen = false;
 
   double _ScreenWidth = 0.0;
   double _ScreenHeight = 0.0;
@@ -88,14 +136,16 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
   double _top = 0.0;
   double _left = 20.0;
 
-  bool isOpen = false;
-
   Uint8List? audio_icon_close;
   Uint8List? audio_icon_next;
   Uint8List? audio_icon_pause;
   Uint8List? audio_icon_play;
   Uint8List? audio_icon_unnext;
   Uint8List? audio_state_icon;
+
+  double audioPlayProgress = 0.0;
+
+  bool audioPlayStates = false;
 
   @override
   void initState() {
@@ -125,11 +175,40 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
       });
     });
 
+    TJAudioPlayViewManager.imageName("audio_icon_pause").then((value) {
+      setState(() {
+        this.audio_icon_pause = value;
+      });
+    });
+
     TJAudioPlayViewManager.imageName("audio_icon_unnext").then((value) {
       setState(() {
         this.audio_icon_unnext = value;
       });
     });
+
+    TJAudioPlayViewManager.setMessageHandler();
+    TJAudioPlayViewManager.setAudioPlayStateChangeListener((audioState) {
+      TJAudioPlayViewManager.getAudioIsPlaying().then((value) {
+        setState(() {
+          this.audioPlayStates = !value;
+        });
+      });
+    }, (progress) {
+      setState(() {
+        this.audioPlayProgress = progress;
+      });
+    });
+
+    TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(
+        { "mediaId":"1",
+          "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
+          "auther":"AudioPlayDemo",
+          "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"}
+    );
+    TJAudioPlayViewManager.playWithModel(model);
+
+
   }
 
   @override
@@ -155,7 +234,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
       _top = defauleTop - kBottomPadding;
     }
     return Offstage(
-      offstage: !this.isShow,
+      offstage: !TJAudioPlayViewManager().isShow,
       child: Stack(
         fit: StackFit.loose,
         children: [
@@ -186,90 +265,104 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
               child: Stack(
                 children: [
                   Positioned(
-                    child: Row(
+                    child: Stack(
+                      clipBehavior: Clip.hardEdge,
                       children: [
-                        Stack(
-                          clipBehavior: Clip.hardEdge,
-                          children: [
-                            Container(
-                              width: kDefaultWidth,
-                              height: kDefaultWidth,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(
-                                    color: Color.fromRGBO(243, 245, 246, 1),
-                                    width: 4),
-                              ),
-                            ),
-                            Positioned(
-                              left: 15,
-                              top: 18,
-                              child: Container(
-                                width: 18,
-                                height: 11,
-                                child: audio_state_icon != null
-                                    ? Image.memory(audio_state_icon!)
-                                    : Image.network(""),
-                              ),
-                            ),
-                          ],
+                        Container(
+                          width: kDefaultWidth,
+                          height: kDefaultWidth,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                                color: Color.fromRGBO(243, 245, 246, 1),
+                                width: 4),
+                          ),
                         ),
-                        Offstage(
-                            offstage: !isOpen,
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                  width: 1,
-                                  height: 18,
-                                  color: Color.fromRGBO(243, 245, 246, 1),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
-                                  width: 45,
-                                  height: 45,
-                                  child: audio_icon_play != null
-                                      ? Image.memory(audio_icon_play!)
-                                      : Text('play'),
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 18,
-                                  color: Color.fromRGBO(243, 245, 246, 1),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
-                                  width: 45,
-                                  height: 45,
-                                  child: audio_icon_unnext != null
-                                      ? Image.memory(audio_icon_unnext!)
-                                      : Text('unnext'),
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 18,
-                                  color: Color.fromRGBO(243, 245, 246, 1),
-                                ),
-                                GestureDetector(
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
-                                    width: 45,
-                                    height: 45,
-                                    child: audio_icon_close != null
-                                        ? Image.memory(audio_icon_close!)
-                                        : Text('close'),
-                                  ),
-                                  onTap: (){
-                                    setState(() {
-                                      this.isShow = false;
-                                    });
-                                  },
-                                )
-                              ],
-                            )),
+                        Positioned(
+                          left: 15,
+                          top: 18,
+                          child: Container(
+                            width: 18,
+                            height: 11,
+                            child: audio_state_icon != null
+                                ? Image.memory(audio_state_icon!)
+                                : Image.network(""),
+                          ),
+                        ),
                       ],
                     ),
+                  ),
+                  Positioned(
+                    top: 2,
+                    left: 45,
+                    child: Offstage(
+                      offstage: !isOpen,
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            width: 1,
+                            height: 18,
+                            color: Color.fromRGBO(243, 245, 246, 1),
+                          ),
+                          new GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
+                              width: 45,
+                              height: 45,
+                              child: this.audioPlayStates == true?
+                              (audio_icon_play != null
+                                  ? Image.memory(audio_icon_play!)
+                                  : Text('play')):(audio_icon_pause != null
+                                  ? Image.memory(audio_icon_pause!)
+                                  : Text('pause')),
+                            ),
+                            onTap: (){
+                              TJAudioPlayViewManager.getAudioIsPlaying().then((value) {
+                                if(value == true){
+                                  TJAudioPlayViewManager.pause();
+                                }else{
+                                  TJAudioPlayViewManager.resume();
+                                }
+                              });
+                            },
+                          ),
+                          Container(
+                            width: 1,
+                            height: 18,
+                            color: Color.fromRGBO(243, 245, 246, 1),
+                          ),
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
+                            width: 45,
+                            height: 45,
+                            child: audio_icon_unnext != null
+                                ? Image.memory(audio_icon_unnext!)
+                                : Text('unnext'),
+                          ),
+                          Container(
+                            width: 1,
+                            height: 18,
+                            color: Color.fromRGBO(243, 245, 246, 1),
+                          ),
+                          GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
+                              width: 45,
+                              height: 45,
+                              child: audio_icon_close != null
+                                  ? Image.memory(audio_icon_close!)
+                                  : Text('close'),
+                            ),
+                            onTap: (){
+                              setState(() {
+                                TJAudioPlayViewManager().isShow = false;
+                              });
+                            },
+                          )
+                        ],
+                      )),
                   ),
                   Positioned(
                     left: 2,
@@ -302,7 +395,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
 
   CircularProgressIndicator _circularProgressIndicator() {
     return CircularProgressIndicator(
-      value: 0.0 / 100.0, // 当前进度
+      value: this.audioPlayProgress, // 当前进度
       strokeWidth: 3, // 最小宽度
       valueColor: AlwaysStoppedAnimation<Color>(
           Color.fromRGBO(48, 114, 246, 1)), // 进度条当前进度颜色

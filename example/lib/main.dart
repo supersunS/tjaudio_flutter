@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
 
 /*
 var model = TJMediaBackGroundModel.mapToModel(
-    { "mediaId":"1",
+      { "mediaId":"1",
       "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
       "auther":"AudioPlayDemo",
       "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"}

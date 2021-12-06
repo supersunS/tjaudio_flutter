@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(BOOL)audioSourceData:(NSArray<TJMediaBackGroundModel *> *)dataArray;
 
++(NSArray<TJMediaBackGroundModel *> *)getAudioSourceData;
+
 +(BOOL)getAudioIsPlaying;
 
 +(BOOL)playWithModel:(TJMediaBackGroundModel *)model;

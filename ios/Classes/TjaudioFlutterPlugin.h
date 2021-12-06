@@ -7,6 +7,6 @@
 
 #import <Flutter/Flutter.h>
 
-@interface TjaudioFlutterPlugin : NSObject <FlutterPlugin>
+@interface TjaudioFlutterPlugin : NSObject <FlutterPlugin,FlutterStreamHandler>
 
 @end
