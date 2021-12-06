@@ -90,6 +90,8 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
             [TJAudioPlayManager resume];
         }else if ([method isEqualToString:@"pause"]){
             [TJAudioPlayManager pause];
+        }else if([method isEqualToString:@"destoryView"]){
+            [TJAudioPlayManager destory];
         }
     }];
     
@@ -107,17 +109,6 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
 - (FlutterError* _Nullable)onCancelWithArguments:(id _Nullable)arguments {
     self.eventSink = nil;
     return nil;
-}
-
-
-
-
-+(void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result{
-    NSString *method = [call method];
-    id arguments = [call arguments];
-//    NSLog(@"~~~~argumentsClass~~~~~%s",object_getClassName(arguments));
-    NSLog(@"~~~~method~~~~%@",method);
-    NSLog(@"~~~~arguments~~~~~%@",arguments);
 }
 
 

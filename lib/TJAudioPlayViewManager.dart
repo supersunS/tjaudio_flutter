@@ -56,6 +56,10 @@ class TJAudioPlayViewManager {
     TjaudioFlutter.setMessageHandler();
   }
 
+   void _cancelMessageHandler() {
+     TjaudioFlutter.cancelMessageHandler();
+  }
+
 
   void _pause(){
     TjaudioFlutter.pause();
@@ -67,6 +71,11 @@ class TJAudioPlayViewManager {
 
   Future<bool> _getAudioIsPlaying() async {
     return TjaudioFlutter.getAudioIsPlaying();
+  }
+
+   void _destoryView(){
+     this.isShow = false;
+     TjaudioFlutter.destoryView();
   }
 
   //=====================================================================================
@@ -107,6 +116,10 @@ class TJAudioPlayViewManager {
     TJAudioPlayViewManager._instance._resume();
   }
 
+  static void destoryView(){
+    TJAudioPlayViewManager._instance._destoryView();
+  }
+
   static Future<bool> getAudioIsPlaying() async {
     return TJAudioPlayViewManager._instance._getAudioIsPlaying();
   }
@@ -119,6 +132,9 @@ class TJAudioPlayViewManager {
     TJAudioPlayViewManager._instance._setMessageHandler();
   }
 
+  static  void cancelMessageHandler() {
+    TJAudioPlayViewManager._instance._cancelMessageHandler();
+  }
 }
 
 class _TJAudioPlayView extends State<TJAudioPlayView>
@@ -208,7 +224,13 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     );
     TJAudioPlayViewManager.playWithModel(model);
 
+  }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    TJAudioPlayViewManager.cancelMessageHandler();
+    super.dispose();
   }
 
   @override
@@ -356,9 +378,8 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                                   : Text('close'),
                             ),
                             onTap: (){
-                              setState(() {
-                                TJAudioPlayViewManager().isShow = false;
-                              });
+                              TJAudioPlayViewManager.destoryView();
+                              this.audioPlayProgress = 0.0;
                             },
                           )
                         ],

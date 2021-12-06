@@ -52,6 +52,9 @@ class TjaudioFlutter {
     var result = _messageChannel.send({"methode":"resume"});
   }
 
+  static void destoryView(){
+    var result = _messageChannel.send({"methode":"destoryView"});
+  }
 
 
 
@@ -82,6 +85,9 @@ class TjaudioFlutter {
      _progressBlock = progressBlock;
   }
 
+  static void cancelMessageHandler() {
+    _streamSubscription.cancel();
+  }
   static void setMessageHandler(){
     _streamSubscription = _eventChannel.receiveBroadcastStream().
     listen((dynamic event) {
