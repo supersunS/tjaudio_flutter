@@ -2,14 +2,13 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tjaudio_flutter/TJAudioPlayStateView.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 
 import 'TJAudioPlayViewManager.dart';
 
-
 class _TJAudioPlayView extends State<TJAudioPlayView>
     with SingleTickerProviderStateMixin {
-
   final double kBottomPadding = 88.0; //距顶部的偏移
   final double kDefaultWidth = 48.0; //距底部
   final double kDefaultMAXWidth = 200.0; //距底部
@@ -86,14 +85,15 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
       });
     });
 
-    TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(
-        { "mediaId":"1",
-          "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
-          "auther":"AudioPlayDemo",
-          "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"}
-    );
+    TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel({
+      "mediaId": "1",
+      "coverUrl":
+          "https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
+      "auther": "AudioPlayDemo",
+      "mediaUrl":
+          "https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"
+    });
     TJAudioPlayViewManager.playWithModel(model);
-
   }
 
   @override
@@ -153,7 +153,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                         blurRadius: 10.0,
                         spreadRadius: 2.0)
                   ] // 边色与边宽度
-              ),
+                  ),
               child: Stack(
                 children: [
                   Positioned(
@@ -177,9 +177,21 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                           child: Container(
                             width: 18,
                             height: 11,
-                            child: audio_state_icon != null
-                                ? Image.memory(audio_state_icon!)
-                                : Image.network(""),
+                            child:Offstage(
+                              offstage: this.audioPlayStates == false,
+                              child: (audio_state_icon != null
+                                  ? Image.memory(audio_state_icon!)
+                                  : Image.network("")),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: 6,
+                          top: 6,
+                          child:
+                          Offstage(
+                              offstage: this.audioPlayStates != false,
+                              child:TJAudioPlayStateView(animationsStart: !this.audioPlayStates,),
                           ),
                         ),
                       ],
@@ -200,21 +212,23 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                             ),
                             new GestureDetector(
                               child: Container(
-                                padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
+                                padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 width: 45,
                                 height: 45,
-                                child: this.audioPlayStates == true?
-                                (audio_icon_play != null
-                                    ? Image.memory(audio_icon_play!)
-                                    : Text('play')):(audio_icon_pause != null
-                                    ? Image.memory(audio_icon_pause!)
-                                    : Text('pause')),
+                                child: this.audioPlayStates == true
+                                    ? (audio_icon_play != null
+                                        ? Image.memory(audio_icon_play!)
+                                        : Text('play'))
+                                    : (audio_icon_pause != null
+                                        ? Image.memory(audio_icon_pause!)
+                                        : Text('pause')),
                               ),
-                              onTap: (){
-                                TJAudioPlayViewManager.getAudioIsPlaying().then((value) {
-                                  if(value == true){
+                              onTap: () {
+                                TJAudioPlayViewManager.getAudioIsPlaying()
+                                    .then((value) {
+                                  if (value == true) {
                                     TJAudioPlayViewManager.pause();
-                                  }else{
+                                  } else {
                                     TJAudioPlayViewManager.resume();
                                   }
                                 });
@@ -226,7 +240,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                               color: Color.fromRGBO(243, 245, 246, 1),
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(0, 12,0 , 12),
+                              padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                               width: 45,
                               height: 45,
                               child: audio_icon_unnext != null
@@ -247,7 +261,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                                     ? Image.memory(audio_icon_close!)
                                     : Text('close'),
                               ),
-                              onTap: (){
+                              onTap: () {
                                 TJAudioPlayViewManager.destoryView();
                                 this.audioPlayProgress = 0.0;
                               },
