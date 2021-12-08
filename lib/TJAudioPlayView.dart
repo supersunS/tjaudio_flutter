@@ -9,11 +9,11 @@ import 'TJAudioPlayViewManager.dart';
 
 class _TJAudioPlayView extends State<TJAudioPlayView>
     with SingleTickerProviderStateMixin {
-  final double kBottomPadding = 88.0; //距顶部的偏移
-  final double kDefaultWidth = 48.0; //距底部
-  final double kDefaultMAXWidth = 200.0; //距底部
-  bool isOpen = false;
-
+  final double _kBottomPadding = 88.0; //距顶部的偏移
+  final double _kDefaultWidth = 48.0; //距底部
+  final double _kDefaultMAXWidth = 200.0; //距底部
+  bool _isOpen = false;
+  int _sourceCount = 0;
   double _ScreenWidth = 0.0;
   double _ScreenHeight = 0.0;
   double _screenTopPadding = 0.0;
@@ -21,16 +21,18 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
   double _top = 0.0;
   double _left = 20.0;
 
-  Uint8List? audio_icon_close;
-  Uint8List? audio_icon_next;
-  Uint8List? audio_icon_pause;
-  Uint8List? audio_icon_play;
-  Uint8List? audio_icon_unnext;
-  Uint8List? audio_state_icon;
+  Uint8List? _audio_icon_close;
+  Uint8List? _audio_icon_next;
+  Uint8List? _audio_icon_pause;
+  Uint8List? _audio_icon_play;
+  Uint8List? _audio_icon_unnext;
+  Uint8List? _audio_state_icon;
 
-  double audioPlayProgress = 0.0;
+  double _audioPlayProgress = 0.0;
 
-  bool audioPlayStates = false;
+  bool _audioPlayStates = false;
+
+
 
   @override
   void initState() {
@@ -38,37 +40,37 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     super.initState();
     TJAudioPlayViewManager.imageName("audio_state_icon").then((value) {
       setState(() {
-        this.audio_state_icon = value;
+        this._audio_state_icon = value;
       });
     });
 
     TJAudioPlayViewManager.imageName("audio_icon_close").then((value) {
       setState(() {
-        this.audio_icon_close = value;
+        this._audio_icon_close = value;
       });
     });
 
     TJAudioPlayViewManager.imageName("audio_icon_next").then((value) {
       setState(() {
-        this.audio_icon_next = value;
+        this._audio_icon_next = value;
       });
     });
 
     TJAudioPlayViewManager.imageName("audio_icon_play").then((value) {
       setState(() {
-        this.audio_icon_play = value;
+        this._audio_icon_play = value;
       });
     });
 
     TJAudioPlayViewManager.imageName("audio_icon_pause").then((value) {
       setState(() {
-        this.audio_icon_pause = value;
+        this._audio_icon_pause = value;
       });
     });
 
     TJAudioPlayViewManager.imageName("audio_icon_unnext").then((value) {
       setState(() {
-        this.audio_icon_unnext = value;
+        this._audio_icon_unnext = value;
       });
     });
 
@@ -76,24 +78,15 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     TJAudioPlayViewManager.setAudioPlayStateChangeListener((audioState) {
       TJAudioPlayViewManager.getAudioIsPlaying().then((value) {
         setState(() {
-          this.audioPlayStates = !value;
+          this._audioPlayStates = !value;
         });
       });
     }, (progress) {
       setState(() {
-        this.audioPlayProgress = progress;
+        this._audioPlayProgress = progress;
       });
     });
 
-    TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel({
-      "mediaId": "1",
-      "coverUrl":
-          "https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
-      "auther": "AudioPlayDemo",
-      "mediaUrl":
-          "https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"
-    });
-    TJAudioPlayViewManager.playWithModel(model);
   }
 
   @override
@@ -110,8 +103,8 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     _screenTopPadding = MediaQuery.of(context).padding.top + 20;
 
     double defauleTop =
-        _ScreenHeight - kDefaultWidth - kBottomPadding - _screenTopPadding;
-    double currentWidth = isOpen ? kDefaultMAXWidth : kDefaultWidth;
+        _ScreenHeight - _kDefaultWidth - _kBottomPadding - _screenTopPadding;
+    double currentWidth = _isOpen ? _kDefaultMAXWidth : _kDefaultWidth;
 
     if (_left < 20) {
       _left = 20;
@@ -122,8 +115,8 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     if (_top < _screenTopPadding) {
       _top = _screenTopPadding;
     }
-    if (_top > defauleTop - kBottomPadding) {
-      _top = defauleTop - kBottomPadding;
+    if (_top > defauleTop - _kBottomPadding) {
+      _top = defauleTop - _kBottomPadding;
     }
     return Offstage(
       offstage: !TJAudioPlayViewManager().isShow,
@@ -134,7 +127,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
             left: _left,
             top: _top,
             child: AnimatedContainer(
-              width: this.isOpen == false ? kDefaultWidth : kDefaultMAXWidth,
+              width: this._isOpen == false ? _kDefaultWidth : _kDefaultMAXWidth,
               height: 48,
               duration: Duration(milliseconds: 250),
               curve: Curves.ease,
@@ -161,8 +154,8 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                       clipBehavior: Clip.hardEdge,
                       children: [
                         Container(
-                          width: kDefaultWidth,
-                          height: kDefaultWidth,
+                          width: _kDefaultWidth,
+                          height: _kDefaultWidth,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(24),
@@ -178,9 +171,9 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                             width: 18,
                             height: 11,
                             child:Offstage(
-                              offstage: this.audioPlayStates == false,
-                              child: (audio_state_icon != null
-                                  ? Image.memory(audio_state_icon!)
+                              offstage: this._audioPlayStates == false,
+                              child: (_audio_state_icon != null
+                                  ? Image.memory(_audio_state_icon!)
                                   : Image.network("")),
                             ),
                           ),
@@ -190,8 +183,8 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                           top: 6,
                           child:
                           Offstage(
-                              offstage: this.audioPlayStates != false,
-                              child:TJAudioPlayStateView(animationsStart: !this.audioPlayStates,),
+                              offstage: this._audioPlayStates != false,
+                              child:TJAudioPlayStateView(animationsStart: !this._audioPlayStates,),
                           ),
                         ),
                       ],
@@ -201,7 +194,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                     top: 2,
                     left: 45,
                     child: Offstage(
-                        offstage: !isOpen,
+                        offstage: !_isOpen,
                         child: Row(
                           children: [
                             Container(
@@ -215,12 +208,12 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                                 padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
                                 width: 45,
                                 height: 45,
-                                child: this.audioPlayStates == true
-                                    ? (audio_icon_play != null
-                                        ? Image.memory(audio_icon_play!)
+                                child: this._audioPlayStates == true
+                                    ? (_audio_icon_play != null
+                                        ? Image.memory(_audio_icon_play!)
                                         : Text('play'))
-                                    : (audio_icon_pause != null
-                                        ? Image.memory(audio_icon_pause!)
+                                    : (_audio_icon_pause != null
+                                        ? Image.memory(_audio_icon_pause!)
                                         : Text('pause')),
                               ),
                               onTap: () {
@@ -239,13 +232,16 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                               height: 18,
                               color: Color.fromRGBO(243, 245, 246, 1),
                             ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
-                              width: 45,
-                              height: 45,
-                              child: audio_icon_unnext != null
-                                  ? Image.memory(audio_icon_unnext!)
-                                  : Text('unnext'),
+                            GestureDetector(
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                                width: 45,
+                                height: 45,
+                                child: _sourceCount>1 ?
+                                (_audio_icon_next != null ? Image.memory(_audio_icon_next!) : Text('next'))
+                                    : (_audio_icon_unnext != null ? Image.memory(_audio_icon_unnext!) : Text('unnext')),
+                              ),
+                              onTap:_sourceCount>1? _onTapNextAudio:null,
                             ),
                             Container(
                               width: 1,
@@ -257,13 +253,15 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                                 padding: EdgeInsets.fromLTRB(0, 16, 0, 16),
                                 width: 45,
                                 height: 45,
-                                child: audio_icon_close != null
-                                    ? Image.memory(audio_icon_close!)
+                                child: _audio_icon_close != null
+                                    ? Image.memory(_audio_icon_close!)
                                     : Text('close'),
                               ),
                               onTap: () {
                                 TJAudioPlayViewManager.destoryView();
-                                this.audioPlayProgress = 0.0;
+                                setState(() {
+                                  this._audioPlayProgress = 0.0;
+                                });
                               },
                             )
                           ],
@@ -278,7 +276,10 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                       child: _circularProgressIndicator(),
                       onTap: () {
                         this.setState(() {
-                          isOpen = !isOpen;
+                          _isOpen = !_isOpen;
+                          if(_isOpen){
+                            _sourceCount = TJAudioPlayViewManager().sourceCount;
+                          }
                         });
                       },
                       onPanUpdate: (DragUpdateDetails detail) {
@@ -298,9 +299,13 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     );
   }
 
+  _onTapNextAudio(){
+    TJAudioPlayViewManager.nextAudio();
+  }
+
   CircularProgressIndicator _circularProgressIndicator() {
     return CircularProgressIndicator(
-      value: this.audioPlayProgress, // 当前进度
+      value: this._audioPlayProgress, // 当前进度
       strokeWidth: 3, // 最小宽度
       valueColor: AlwaysStoppedAnimation<Color>(
           Color.fromRGBO(48, 114, 246, 1)), // 进度条当前进度颜色

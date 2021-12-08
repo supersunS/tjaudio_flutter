@@ -391,8 +391,12 @@ static TJAudioPlayManager *_shareInstance = nil;
         }
     }else if (stopReason == STKAudioPlayerStopReasonUserAction){
         
-    }else{
-        
+    }else if(stopReason == STKAudioPlayerStopReasonNone){
+        if(progress > duration){
+            if(self.isAutoNextAudio){
+                [self nextAudio];
+            }
+        }
     }
 }
 /// Raised when an unexpected and possibly unrecoverable error has occured (usually best to recreate the STKAudioPlauyer)

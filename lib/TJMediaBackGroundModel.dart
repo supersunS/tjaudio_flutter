@@ -14,8 +14,8 @@ class TJMediaBackGroundModel{
 //资源媒体介绍
   var memo = '';
 
-  double playbackTime = 0.0;
-  double playbackDuration = 0.0;
+  int playbackTime = 0;
+  int playbackDuration = 0;
 
 //网络资源地址
   var mediaUrl = '';
@@ -47,8 +47,8 @@ class TJMediaBackGroundModel{
         map['auther'] != null?map['auther']:'',
         map['title'] != null?map['title']:'',
         map['memo'] != null?map['memo']:'',
-        double.parse(map['playbackTime'] != null?map['playbackTime']:'0.0'),
-        double.parse(map['playbackDuration'] != null?map['playbackDuration']:'0.0'),
+        map['playbackTime'] != null?map['playbackTime']:0,
+        map['playbackDuration'] != null?map['playbackDuration']:0,
         map['mediaUrl'] != null?map['mediaUrl']:'',
         map['mediaLocalPath'] != null?map['mediaLocalPath']:'',
         false,

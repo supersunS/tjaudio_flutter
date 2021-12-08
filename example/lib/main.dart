@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:tjaudio_flutter/TJAudioPlayView.dart';
+import 'package:tjaudio_flutter/TJAudioPlayViewManager.dart';
+import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 import 'package:tjaudio_flutter/tjaudio_flutter.dart';
 
 void main() {
@@ -55,26 +59,48 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('audioPlay Demo'),
         ),
-        body:Center(
-          child: Container(
-            child: TJAudioPlayView(),
-          ),
+        body:Stack(
+          children: [
+
+            Center(
+              child:GestureDetector(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.orange,
+                  alignment: Alignment.center,
+                  child: Text("play",),
+                ),
+                onTap: _tapClick,
+              ),
+            ),
+            Container(
+              child: TJAudioPlayView(),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  void _tapClick(){
+    Future<String> loadString = DefaultAssetBundle.of(context).loadString("assets/data/video.json");
+
+    loadString.then((String value){
+      List videolist = json.decode(value); // 解码
+      List<TJMediaBackGroundModel> resList = [];
+      for(int i=0;i<videolist.length;i++){
+        TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(videolist[i]);
+        resList.add(model);
+      }
+      TJAudioPlayViewManager.audioSourceData(resList);
+      TJAudioPlayViewManager.playWithModel(resList.first);
+    });
+    TJAudioPlayViewManager.openBackGround(true);
+    TJAudioPlayViewManager.show();
+
+  }
 }
 
 
-/*
-var model = TJMediaBackGroundModel.mapToModel(
-      { "mediaId":"1",
-      "coverUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/backstageSystem/image/1631168736433.jpg",
-      "auther":"AudioPlayDemo",
-      "mediaUrl":"https://tianjiutest.oss-cn-beijing.aliyuncs.com/tojoy/tojoyClould/serverUpload/202109/01/image/1630459636944.mp3"}
-);
-TJAudioPlayViewManager.openBackGround(true);
-TJAudioPlayViewManager.audioSourceData([model]);
-TJAudioPlayViewManager.show();
-TJAudioPlayViewManager.playWithModel(model);
- */
+

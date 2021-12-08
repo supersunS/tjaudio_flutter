@@ -36,8 +36,8 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
     [messagechannel setMessageHandler:^(NSDictionary * _Nullable message, FlutterReply  _Nonnull callback) {
         NSString *method = [message objectForKey:@"methode"];
         id arguments = [message objectForKey:@"arguments"];
-        NSLog(@"~~~~method~~~~%@",method);
-        NSLog(@"~~~~arguments~~~~~%@",arguments);
+//        NSLog(@"~~~~method~~~~%@",method);
+//        NSLog(@"~~~~arguments~~~~~%@",arguments);
         
         if ([method isEqualToString:@"imageName"]){
             if([arguments isKindOfClass:[NSString class]]){
@@ -49,8 +49,6 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
             }
         }else if([method isEqualToString:@"openBackGround"]){
             [TJAudioPlayManager openBackGround:[arguments boolValue]];
-        }else if ([method isEqualToString:@"show"]){
-            [TJAudioPlayViewManger show];
         }else if ([method isEqualToString:@"audioSourceData"]){
             NSMutableArray<TJMediaBackGroundModel *> *resArray = [[NSMutableArray alloc]init];
             if([arguments isKindOfClass:[NSArray class]]){
@@ -92,6 +90,10 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
             [TJAudioPlayManager pause];
         }else if([method isEqualToString:@"destoryView"]){
             [TJAudioPlayManager destory];
+        }else if([method isEqualToString:@"autoNextAudio"]){
+            [TJAudioPlayManager autoNextAudio:[arguments boolValue]];
+        }else if([method isEqualToString:@"nextAudio"]){
+            [TJAudioPlayManager nextAudio];
         }
     }];
     

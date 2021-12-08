@@ -6,11 +6,10 @@ import 'package:tjaudio_flutter/tjaudio_flutter.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 
 class TJAudioPlayViewManager {
-
-  List <TJMediaBackGroundModel> currentAudioSourceData = [];
-  List <TJMediaBackGroundModel> cacheNewAudioSourceData = [];
-
-  bool isShow = true;
+  List<TJMediaBackGroundModel> _currentAudioSourceData = [];
+  List<TJMediaBackGroundModel> _cacheNewAudioSourceData = [];
+  bool isShow = false;
+  int sourceCount = 0;
 
   TJAudioPlayViewManager._privateConstructor();
 
@@ -27,14 +26,38 @@ class TJAudioPlayViewManager {
 
   ///必须先设置资源再执行 show ，不然 会造成监听错误
   Future<bool> _audioSourceData(List<TJMediaBackGroundModel> dataArray) async {
+    if (this._currentAudioSourceData.length != 0) {
+      this._cacheNewAudioSourceData = dataArray;
+      return false;
+    }
+    this.sourceCount = dataArray.length;
+    this._currentAudioSourceData = dataArray;
+    _autoNextAudio(true);
     return TjaudioFlutter.audioSourceData(dataArray);
   }
 
   void _show() {
-     this.isShow = true;
+    this.isShow = true;
   }
 
   Future<bool> _playWithModel(TJMediaBackGroundModel model) async {
+    if (this._cacheNewAudioSourceData != null) {
+      if (this._cacheNewAudioSourceData.length != 0) {
+        this._currentAudioSourceData = [];
+        this._audioSourceData(this._cacheNewAudioSourceData);
+        this._cacheNewAudioSourceData = [];
+      } else {
+        List<TJMediaBackGroundModel> dataArray = [];
+        dataArray.addAll(this._currentAudioSourceData);
+        this._currentAudioSourceData = [];
+        this._audioSourceData(dataArray);
+        this._cacheNewAudioSourceData = [];
+      }
+    } else {
+      this._currentAudioSourceData = [];
+      this._audioSourceData([]);
+      this._cacheNewAudioSourceData = [];
+    }
     return TjaudioFlutter.playWithModel(model);
   }
 
@@ -46,24 +69,25 @@ class TJAudioPlayViewManager {
     return TjaudioFlutter.imageName(imageName);
   }
 
-  void _setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,ValueChanged progressBlock) async{
-    TjaudioFlutter.setAudioPlayStateChangeListener(audioPlayStateChangeBlock, progressBlock);
+  void _setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,
+      ValueChanged progressBlock) async {
+    TjaudioFlutter.setAudioPlayStateChangeListener(
+        audioPlayStateChangeBlock, progressBlock);
   }
 
   void _setMessageHandler() {
     TjaudioFlutter.setMessageHandler();
   }
 
-   void _cancelMessageHandler() {
-     TjaudioFlutter.cancelMessageHandler();
+  void _cancelMessageHandler() {
+    TjaudioFlutter.cancelMessageHandler();
   }
 
-
-  void _pause(){
+  void _pause() {
     TjaudioFlutter.pause();
   }
 
-  void _resume(){
+  void _resume() {
     TjaudioFlutter.resume();
   }
 
@@ -71,9 +95,17 @@ class TJAudioPlayViewManager {
     return TjaudioFlutter.getAudioIsPlaying();
   }
 
-   void _destoryView(){
-     this.isShow = false;
-     TjaudioFlutter.destoryView();
+  void _autoNextAudio(bool autoNextAudio) {
+    TjaudioFlutter.autoNextAudio(autoNextAudio);
+  }
+
+  void _destoryView() {
+    this.isShow = false;
+    TjaudioFlutter.destoryView();
+  }
+
+  void _nextAudio() {
+    TjaudioFlutter.nextAudio();
   }
 
   //=====================================================================================
@@ -84,8 +116,7 @@ class TJAudioPlayViewManager {
   }
 
   ///必须先设置资源再执行 show ，不然 会造成监听错误
-  static Future<bool> audioSourceData(
-      List<TJMediaBackGroundModel> dataArray) async {
+  static Future<bool> audioSourceData(List<TJMediaBackGroundModel> dataArray) async {
     return TJAudioPlayViewManager._instance._audioSourceData(dataArray);
   }
 
@@ -105,34 +136,52 @@ class TJAudioPlayViewManager {
     return TJAudioPlayViewManager._instance._imageName(imageName);
   }
 
-
-  static void pause(){
+  static void pause() {
     TJAudioPlayViewManager._instance._pause();
   }
 
-  static void resume(){
+  static void resume() {
     TJAudioPlayViewManager._instance._resume();
   }
 
-  static void destoryView(){
+  static void autoNextAudio(bool autoNextAudio) {
+    TJAudioPlayViewManager._instance._autoNextAudio(autoNextAudio);
+  }
+
+  static void destoryView() {
+    TJAudioPlayViewManager._instance._cacheNewAudioSourceData = [];
+    TJAudioPlayViewManager._instance._currentAudioSourceData = [];
     TJAudioPlayViewManager._instance._destoryView();
+  }
+
+  static void nextAudio() {
+    TJAudioPlayViewManager._instance._nextAudio();
   }
 
   static Future<bool> getAudioIsPlaying() async {
     return TJAudioPlayViewManager._instance._getAudioIsPlaying();
   }
 
-  static void setAudioPlayStateChangeListener(ValueChanged audioPlayStateChangeBlock,ValueChanged progressBlock) async{
-    TJAudioPlayViewManager._instance._setAudioPlayStateChangeListener(audioPlayStateChangeBlock, progressBlock);
+  static void setAudioPlayStateChangeListener(
+      ValueChanged audioPlayStateChangeBlock,
+      ValueChanged progressBlock) async {
+    TJAudioPlayViewManager._instance._setAudioPlayStateChangeListener(
+        audioPlayStateChangeBlock, progressBlock);
   }
 
   static void setMessageHandler() {
     TJAudioPlayViewManager._instance._setMessageHandler();
   }
 
-  static  void cancelMessageHandler() {
+  static void cancelMessageHandler() {
     TJAudioPlayViewManager._instance._cancelMessageHandler();
   }
+
+  // static bool get isShow {
+  //   return TJAudioPlayViewManager._instance._isShow;
+  // }
+  //
+  // static int get sourceCount {
+  //   return TJAudioPlayViewManager._instance._sourceCount;
+  // }
 }
-
-

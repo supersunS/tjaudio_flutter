@@ -29,9 +29,8 @@ class TjaudioFlutter {
 
   ///必须先设置资源再执行 show ，不然 会造成监听错误
   static Future<bool> audioSourceData(List<TJMediaBackGroundModel> dataArray) async{
-    var result = await _messageChannel.send({"methode":"audioSourceData","arguments":TJMediaBackGroundModel.toMapList(dataArray)});
-
-    return result as bool;
+    Map result = await _messageChannel.send({"methode":"audioSourceData","arguments":TJMediaBackGroundModel.toMapList(dataArray)}) as Map;
+    return result["result"] as bool;
   }
 
   static void show(){
@@ -52,8 +51,17 @@ class TjaudioFlutter {
     var result = _messageChannel.send({"methode":"resume"});
   }
 
+  static void autoNextAudio(bool autoNextAudio){
+    _messageChannel.send({"methode":"autoNextAudio","arguments":autoNextAudio});
+  }
+
   static void destoryView(){
     var result = _messageChannel.send({"methode":"destoryView"});
+  }
+
+
+  static void nextAudio(){
+    var result = _messageChannel.send({"methode":"nextAudio"});
   }
 
 
