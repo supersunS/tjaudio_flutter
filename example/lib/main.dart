@@ -84,18 +84,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _tapClick(){
-    Future<String> loadString = DefaultAssetBundle.of(context).loadString("assets/data/video.json");
-
-    loadString.then((String value){
-      List videolist = json.decode(value); // 解码
-      List<TJMediaBackGroundModel> resList = [];
-      for(int i=0;i<videolist.length;i++){
-        TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(videolist[i]);
-        resList.add(model);
-      }
-      TJAudioPlayViewManager.audioSourceData(resList);
-      TJAudioPlayViewManager.playWithModel(resList.first);
-    });
+    // Future<String> loadString = DefaultAssetBundle.of(context).loadString("assets/data/video.json");
+    //
+    // loadString.then((String value){
+    //   List videolist = json.decode(value); // 解码
+    //   List<TJMediaBackGroundModel> resList = [];
+    //   for(int i=0;i<videolist.length;i++){
+    //     TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(videolist[i]);
+    //     resList.add(model);
+    //   }
+    //   TJAudioPlayViewManager.audioSourceData(resList);
+    //   TJAudioPlayViewManager.playWithModel(resList.first);
+    // });
     TJAudioPlayViewManager.openBackGround(true);
     TJAudioPlayViewManager.show();
 

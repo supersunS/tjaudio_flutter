@@ -18,7 +18,6 @@ class TjaudioFlutter {
 
   static Future<String?> get platformVersion async {
     final String? version = await _messageChannel.send({"methode":"getPlatformVersion"});
-
     return version;
   }
 
@@ -63,8 +62,6 @@ class TjaudioFlutter {
   static void nextAudio(){
     var result = _messageChannel.send({"methode":"nextAudio"});
   }
-
-
 
   static Future<List<TJMediaBackGroundModel>> getAudioSourceData() async{
     List res = await _messageChannel.send({"methode":"getAudioSourceData"}) as List;
