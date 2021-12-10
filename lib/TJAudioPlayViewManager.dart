@@ -177,11 +177,4 @@ class TJAudioPlayViewManager {
     TJAudioPlayViewManager._instance._cancelMessageHandler();
   }
 
-  // static bool get isShow {
-  //   return TJAudioPlayViewManager._instance._isShow;
-  // }
-  //
-  // static int get sourceCount {
-  //   return TJAudioPlayViewManager._instance._sourceCount;
-  // }
 }

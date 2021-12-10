@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
     // });
     TJAudioPlayViewManager.openBackGround(true);
     TJAudioPlayViewManager.show();
-
+      setState(() {});
   }
 }
 

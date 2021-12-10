@@ -39,7 +39,7 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
 //        NSLog(@"~~~~method~~~~%@",method);
 //        NSLog(@"~~~~arguments~~~~~%@",arguments);
         
-        if ([method isEqualToString:@"imageName"]){
+        if ([method isEqualToString:@"imageName"]){//获取原生图片资源 二进制格式
             if([arguments isKindOfClass:[NSString class]]){
                 UIImage *image = [TJAudioPlayManager tj_imageNamed:arguments];
                 if(image){
@@ -47,7 +47,7 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
                     callback(@{@"image":imageData});
                 }
             }
-        }else if([method isEqualToString:@"openBackGround"]){
+        }else if([method isEqualToString:@"openBackGround"]){//是否开启后台播放和远程控制
             [TJAudioPlayManager openBackGround:[arguments boolValue]];
         }else if ([method isEqualToString:@"audioSourceData"]){
             NSMutableArray<TJMediaBackGroundModel *> *resArray = [[NSMutableArray alloc]init];
@@ -64,7 +64,7 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
             }
             BOOL res = [TJAudioPlayManager audioSourceData:resArray];
             callback(@{@"result":@(res)});
-        }else if ([method isEqualToString:@"playWithModel"]){
+        }else if ([method isEqualToString:@"playWithModel"]){//播放指定数据源
             if([arguments isKindOfClass:[NSString class]]){
                 NSDictionary *dict = [self dictionaryWithJsonString:arguments];
                 TJMediaBackGroundModel *model = [[TJMediaBackGroundModel alloc]init];
@@ -75,24 +75,24 @@ static NSString *const CHANNEL_NAME_message = @"com.flutterplugin.tj/flutter_aud
                 BOOL res =  [TJAudioPlayManager playWithModel:model];
                 callback(@{@"result":@(res)});
             }
-        }else if([method isEqualToString:@"setAudioPlayStateChangeListener"]){
+        }else if([method isEqualToString:@"setAudioPlayStateChangeListener"]){//监听播放进度和状态
             [TJAudioPlayManager audioPlayStateChangeListener:^(STKAudioPlayerState audioState) {
                 [TjaudioFlutterPlugin sharedInstance].eventSink(@{@"audioState":@(audioState)});
             } audioPlayProgress:^(float progress) {
                 [TjaudioFlutterPlugin sharedInstance].eventSink(@{@"progress":@(progress)});
             }];
-        }else if ([method isEqualToString:@"getAudioIsPlaying"]){
+        }else if ([method isEqualToString:@"getAudioIsPlaying"]){//获取当前播放状态
             BOOL res =  [TJAudioPlayManager getAudioIsPlaying];
             callback(@{@"result":@(res)});
-        }else if ([method isEqualToString:@"resume"]){
+        }else if ([method isEqualToString:@"resume"]){//恢复播放后
             [TJAudioPlayManager resume];
-        }else if ([method isEqualToString:@"pause"]){
+        }else if ([method isEqualToString:@"pause"]){//暂停播放
             [TJAudioPlayManager pause];
-        }else if([method isEqualToString:@"destoryView"]){
+        }else if([method isEqualToString:@"destoryView"]){//销毁播放器
             [TJAudioPlayManager destory];
-        }else if([method isEqualToString:@"autoNextAudio"]){
+        }else if([method isEqualToString:@"autoNextAudio"]){//是否自动播放下一个数据源
             [TJAudioPlayManager autoNextAudio:[arguments boolValue]];
-        }else if([method isEqualToString:@"nextAudio"]){
+        }else if([method isEqualToString:@"nextAudio"]){//下一首
             [TJAudioPlayManager nextAudio];
         }
     }];
