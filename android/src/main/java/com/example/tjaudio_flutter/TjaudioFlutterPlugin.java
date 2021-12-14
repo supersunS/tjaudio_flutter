@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.tojoy.musicplayer.constants.MusicConstants;
+import com.tojoy.musicplayer.listener.MusicPlayerEventListener;
 import com.tojoy.musicplayer.listener.MusicPlayerInfoListener;
 import com.tojoy.musicplayer.manager.MusicPlayerManager;
 import com.tojoy.musicplayer.model.AudioInfo;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -46,6 +49,8 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
     private BasicMessageChannel _messagechannel;
     private EventChannel _eventChannel;
     private EventChannel.EventSink _eventSink;
+    private TimerTask _timerTask;
+    private Timer _timer;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -99,8 +104,7 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                             .setPlayInfoListener(new MusicPlayerInfoListener() {
                                 //此处自行存储播放记录
                                 @Override
-                                public void onPlayMusiconInfo(AudioInfo musicInfo, int position) {
-                                }
+                                public void onPlayMusiconInfo(AudioInfo musicInfo, int position) { }
                             })
                             //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
                             .initialize(BaseLibKit.getContext());
@@ -109,6 +113,7 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                     Map<String, Boolean> resultMap = new HashMap<>();
                     resultMap.put("result", true);
                     reply.reply(resultMap);
+                    startTimer();
                 } else if (methode.equals("audioSourceData")) {
                     if (arguments instanceof List) {
                         Gson gson = new Gson();
@@ -127,16 +132,52 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                     reply.reply(resultMap);
                 } else if (methode.equals("resume")) {
                     MusicPlayerManager.getInstance().play();
+                    startTimer();
                 } else if (methode.equals("pause")) {
                     MusicPlayerManager.getInstance().pause();
+                    cancelTimer();
                 } else if (methode.equals("destoryView")) {
                     MusicPlayerManager.getInstance().onStop();
+                    cancelTimer();
                 } else if (methode.equals("autoNextAudio")) {
 
                 } else if (methode.equals("nextAudio")) {
                     MusicPlayerManager.getInstance().playNextMusic();
+                    startTimer();
                 } else if (methode.equals("setAudioPlayStateChangeListener")) {
+                    MusicPlayerManager.getInstance().addOnPlayerEventListener(new MusicPlayerEventListener() {
+                        @Override
+                        public void onMusicPlayerState(int playerState, String message) {
+                            Log.d("~~~~","playerState"+ String.valueOf(playerState));
+                        }
 
+                        @Override
+                        public void onPrepared(long totalDurtion) {
+
+                        }
+
+                        @Override
+                        public void onBufferingUpdate(int percent) {
+
+                        }
+
+                        @Override
+                        public void onPlayMusiconInfo(AudioInfo musicInfo, int position) {
+
+                        }
+
+                        @Override
+                        public void onMusicPathInvalid(AudioInfo musicInfo, int position) {
+
+                        }
+
+                        @Override
+                        public void onTaskRuntime(long totalDurtion, long currentDurtion, int bufferProgress) {
+                            Log.d("~~~~","bufferProgress"+ String.valueOf(bufferProgress));
+                            Log.d("!!!!","currentDurtion"+ String.valueOf(currentDurtion/totalDurtion));
+                        }
+
+                    });
                 }
             }
         });
@@ -187,6 +228,29 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             e.printStackTrace();
         }
         return out.toByteArray();
+    }
+
+    private void startTimer(){
+        if(_timer != null || _timerTask != null){
+            cancelTimer();
+        }
+        _timer = new Timer();
+        _timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                MusicPlayerManager.getInstance().onCheckedCurrentPlayTask();
+            }
+        };
+        _timer.schedule(_timerTask,500L,500L);
+    }
+    private void cancelTimer(){
+        if(_timer != null || _timerTask != null){
+            _timerTask.cancel();
+            _timer.cancel();
+            _timerTask = null;
+            _timer = null;
+        }
     }
 
 }

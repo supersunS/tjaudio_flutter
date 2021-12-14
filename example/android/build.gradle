@@ -33,9 +33,7 @@ allprojects {
             url "http://mvn.gt.getui.com/nexus/content/repositories/releases/"
         }
         mavenCentral()
-
         maven {url 'http://developer.huawei.com/repo/'}
-
     }
 }
 

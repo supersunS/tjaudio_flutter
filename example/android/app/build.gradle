@@ -54,7 +54,3 @@ flutter {
     source '../..'
 }
 
-dependencies {
-    api fileTree(include: ['*.jar'], dir: 'libs')
-    api project(':TojoyMediaKit')
-}

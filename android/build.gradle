@@ -3,7 +3,6 @@ version '1.0'
 
 buildscript {
     repositories {
-        // 镜像下载不下来时可以启用
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://maven.aliyun.com/repository/public'}
 
@@ -44,7 +43,8 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':TojoyMediaKit')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':TojoyMediaKit')
 }
 
 
