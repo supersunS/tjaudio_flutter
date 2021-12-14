@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tojoy.musicplayer.view.ShadowLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/color_ffffff"
+    app:hl_dx="0dp"
+    app:hl_dy="0dp"
+    app:hl_cornerRadius="@dimen/dp_25"
+    app:hl_shadowColor="#20000000">
+
+    <LinearLayout android:id="@+id/ll_player_controller_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_42"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <RelativeLayout
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42">
+
+                <RelativeLayout android:id="@+id/rl_count_down"
+                    android:layout_width="@dimen/dp_42"
+                    android:layout_height="@dimen/dp_42"
+                    android:orientation="vertical">
+                </RelativeLayout>
+
+        </RelativeLayout>
+        <LinearLayout android:id="@+id/ll_music_controller"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_42"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_17"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:visibility="gone"
+                android:background="#F3F5F6"/>
+
+            <ImageView
+                android:id="@+id/music_notice_def_btn_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_music_mini_last_noimal"
+                android:scaleType="center"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:padding="10dp"
+                android:visibility="gone"/>
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_17"
+                android:visibility="visible"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="#F3F5F6"/>
+            <ImageView
+                android:id="@+id/music_notice_def_btn_pause"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:padding="5dp"
+                android:src="@drawable/audio_icon_pause"
+                />
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_17"
+                android:visibility="visible"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="#F3F5F6"/>
+            <ImageView
+                android:id="@+id/music_notice_def_btn_next"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:padding="5dp"
+                android:src="@drawable/audio_icon_next"
+                />
+            <View
+                android:layout_width="@dimen/dp_1"
+                android:layout_height="@dimen/dp_17"
+                android:visibility="visible"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="#F3F5F6"/>
+            >
+            <ImageView
+                android:id="@+id/music_notice_def_btn_close"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/audio_icon_close"
+                android:scaleType="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.tojoy.musicplayer.view.ShadowLayout>

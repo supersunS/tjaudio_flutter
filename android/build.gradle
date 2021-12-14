@@ -3,12 +3,21 @@ version '1.0'
 
 buildscript {
     repositories {
+        // 镜像下载不下来时可以启用
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public'}
+
         google()
+        jcenter()
+        maven { url 'https://dl.bintray.com/tencentqcloudterminal/maven' }
         mavenCentral()
+
+        maven {url 'http://developer.huawei.com/repo/'}
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:4.1.3'
+        classpath "com.alibaba:arouter-register:1.0.2"
     }
 }
 
@@ -33,3 +42,9 @@ android {
         minSdkVersion 16
     }
 }
+
+dependencies {
+    implementation project(path: ':TojoyMediaKit')
+}
+
+

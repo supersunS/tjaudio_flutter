@@ -9,6 +9,7 @@ import 'package:tjaudio_flutter/TJAudioPlayView.dart';
 import 'package:tjaudio_flutter/TJAudioPlayViewManager.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
 import 'package:tjaudio_flutter/tjaudio_flutter.dart';
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -59,17 +60,18 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('audioPlay Demo'),
         ),
-        body:Stack(
+        body: Stack(
           children: [
-
             Center(
-              child:GestureDetector(
+              child: GestureDetector(
                 child: Container(
                   width: 100,
                   height: 100,
                   color: Colors.orange,
                   alignment: Alignment.center,
-                  child: Text("play",),
+                  child: Text(
+                    "play",
+                  ),
                 ),
                 onTap: _tapClick,
               ),
@@ -83,24 +85,29 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void _tapClick(){
-    // Future<String> loadString = DefaultAssetBundle.of(context).loadString("assets/data/video.json");
-    //
-    // loadString.then((String value){
-    //   List videolist = json.decode(value); // 解码
-    //   List<TJMediaBackGroundModel> resList = [];
-    //   for(int i=0;i<videolist.length;i++){
-    //     TJMediaBackGroundModel model = TJMediaBackGroundModel.mapToModel(videolist[i]);
-    //     resList.add(model);
-    //   }
-    //   TJAudioPlayViewManager.audioSourceData(resList);
-    //   TJAudioPlayViewManager.playWithModel(resList.first);
-    // });
+  void _tapClick() {
+
+    Future<String> loadString =
+    DefaultAssetBundle.of(context).loadString("assets/data/video.json");
+
+    loadString.then((String value) {
+      List videolist = json.decode(value); // 解码
+      List<TJMediaBackGroundModel> resList = [];
+      for (int i = 0; i < videolist.length; i++) {
+        TJMediaBackGroundModel model =
+        TJMediaBackGroundModel.mapToModel(videolist[i]);
+        resList.add(model);
+      }
+      TJAudioPlayViewManager.audioSourceData(resList);
+      if (Platform.isIOS) {
+        TJAudioPlayViewManager.playWithModel(resList.first);
+      } else if (Platform.isAndroid) {
+        TJAudioPlayViewManager.playWithIndex(0);
+      }
+    });
+
     TJAudioPlayViewManager.openBackGround(true);
     TJAudioPlayViewManager.show();
-      setState(() {});
+    setState(() {});
   }
 }
-
-
-

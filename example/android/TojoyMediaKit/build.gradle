@@ -1,0 +1,78 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ AROUTER_MODULE_NAME : project.getName() ]
+            }
+        }
+
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+
+    api 'junit:junit:4.12'
+
+    /**
+     *  =========== 基础控件 ===========
+     */
+
+
+    //https://github.com/tiagohm/MarkdownView
+//    api 'com.github.tiagohm.MarkdownView:library:0.19.0'
+
+    /**
+     *  =========== 基础工具 ===========
+     */
+
+    //https://github.com/google/gson
+    api 'com.google.code.gson:gson:2.7'
+
+
+    //https://github.com/bumptech/glide
+    api('com.github.bumptech.glide:glide:4.6.1') {
+        exclude group: "com.android.support"
+    }
+    //https://github.com/wasabeef/glide-transformations
+    api 'jp.wasabeef:glide-transformations:3.1.1'
+    /**
+     *  =========== Rx ===========
+     */
+    api 'io.reactivex:rxjava:1.1.0'
+    api 'io.reactivex:rxandroid:1.1.0'
+    api 'io.reactivex.rxjava2:rxjava:2.2.4'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    /**
+     *  =========== 瓦力 ===========
+     */
+
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_42"
+    android:layout_height="@dimen/dp_42"
+    android:id="@+id/rl_progress_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+     <RelativeLayout
+            android:id="@+id/rl_gift_main"
+            android:layout_centerInParent="true"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_42"
+           >
+       <com.tojoy.musicplayer.view.MusicCirleProgressView
+             android:id="@+id/circle_progress_bar3"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_gravity="center_horizontal"
+             app:antiAlias="true"
+             app:arcWidth="@dimen/dp_2"
+             app:arcColors="@color/color_ff3072f6"
+             app:bgArcColor="@color/color_f3f5f6"
+             app:bgArcWidth="@dimen/dp_2"
+             app:maxValue="100"
+             app:startAngle="270"
+             app:sweepAngle="360"
+             app:value="100"
+             app:valueSize="@dimen/sp_6" />
+        </RelativeLayout>
+
+
+        <com.tojoy.musicplayer.view.IndicatorView
+            android:id="@+id/music_indicator1"
+            android:layout_width="@dimen/dp_27"
+            android:layout_height="@dimen/dp_27"
+            android:layout_centerInParent="true">
+
+        </com.tojoy.musicplayer.view.IndicatorView>
+
+</RelativeLayout>

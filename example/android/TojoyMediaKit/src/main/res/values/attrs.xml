@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--唱片机-->
+    <declare-styleable name="MusicJukeBoxBackgroundLayout">
+        <attr name="backgroundEnable" format="boolean"/>
+    </declare-styleable>
+
+    <!--唱片机-->
+    <declare-styleable name="MusicJukeBoxCoverPager">
+        <!--旋转一圈耗时,单位秒-->
+        <attr name="musicJukeRotationDurtion" format="integer"/>
+    </declare-styleable>
+    <!--迷你唱片机-->
+    <declare-styleable name="MusicJukeBoxViewSmall">
+        <!--唱片机是否自行获得焦点-->
+        <attr name="musicMiniJukeEnable" format="boolean"/>
+        <attr name="musicMiniJukeRotationDurtion" format="integer"/>
+    </declare-styleable>
+    <!--悬浮窗-->
+    <declare-styleable name="MusicWindowPlayer">
+        <!--横向间距-->
+        <attr name="musicWinHorMagin" format="dimension"/>
+    </declare-styleable>
+    <!--悬浮窗-->
+    <declare-styleable name="MusicPlayerWindow">
+        <!--横向间距-->
+        <attr name="musicPlayerWinHorMagin" format="dimension"/>
+    </declare-styleable>
+
+    <!--扇形-->
+    <declare-styleable name="MusicFanLayout">
+        <!--扇形颜色-->
+        <attr name="trashColor" format="color"></attr>
+    </declare-styleable>
+
+    <!--扇形菜单的属性-->
+    <declare-styleable name="MusicArcMenuView">
+        <!--圆形半径-->
+        <attr name="arcMenuRadius" format="dimension"></attr>
+        <!--圆形角度-->
+        <attr name="arcMenuAngle" format="integer"></attr>
+        <!--菜单展开动画时长-->
+        <attr name="arcExpandOpenDurtion" format="integer"></attr>
+        <!--菜单关闭动画时长-->
+        <attr name="arcExpandCloseDurtion" format="integer"></attr>
+        <!--默认的Btn ICON-->
+        <attr name="arcBtnIcon" format="reference"></attr>
+        <!--是否自动创建一个默认的弧形菜单，位于ParentView右下角-->
+        <attr name="arcAutoCreateDefaultMenus" format="boolean"></attr>
+        <!--菜单抛锚位置-->
+        <attr name="arcDropPosition">
+            <enum name="left_top" value="0"></enum>
+            <enum name="left_bottom" value="1"></enum>
+            <enum name="right_bottom" value="2"></enum>
+            <enum name="right_top" value="3"></enum>
+            <enum name="center" value="4"></enum>
+            <enum name="left" value="5"></enum>
+            <enum name="top" value="6"></enum>
+            <enum name="right" value="7"></enum>
+            <enum name="bottom" value="8"></enum>
+        </attr>
+        <!--菜单初始时在View中的位置-->
+        <attr name="arcGravity">
+            <flag name="top" value="48" />
+            <flag name="left" value="3" />
+            <flag name="right" value="5" />
+            <flag name="bottom" value="80" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+            <flag name="center" value="17" />
+            <flag name="clip_horizontal" value="8" />
+            <flag name="clip_vertical" value="128" />
+            <flag name="start" value="8388611" />
+            <flag name="end" value="8388613" />
+        </attr>
+    </declare-styleable>
+
+    <!-- 圆形进度条 -->
+    <declare-styleable name="MusicCircleProgressBar">
+        <attr name="antiAlias" format="boolean"/>
+        <attr name="startAngle" format="float"  />
+        <attr name="sweepAngle" format="float" />
+        <attr name="animTime" format="integer"/>
+        <attr name="maxValue" format="float" />
+        <attr name="value" format="float" />
+        <attr name="precision" format="integer" />
+        <attr name="valueSize" format="float" />
+        <attr name="valueColor" format="integer"/>
+        <attr name="textOffsetPercentInRadius" format="float" />
+        <!-- 圆弧宽度 -->
+        <attr name="arcWidth" format="float"/>
+        <attr name="arcColors" format="integer" />
+        <!-- 背景圆弧颜色 -->
+        <attr name="bgArcColor" format="integer"/>
+        <!-- 背景圆弧宽度 -->
+        <attr name="bgArcWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="BezierBannerView">
+        <attr name="selectedColor" format="color"/>
+        <attr name="unSelectedColor" format="color"/>
+        <attr name="selectedRaduis" format="dimension"/>
+        <attr name="unSelectedRaduis" format="dimension"/>
+        <attr name="spacing" format="dimension"/>
+    </declare-styleable>
+    <!--ShadowLayout-->
+    <declare-styleable name="ShadowLayout">
+        <!--阴影的圆角大小-->
+        <attr name="hl_cornerRadius" format="dimension" />
+        <!--阴影的扩散范围(也可以理解为扩散程度)-->
+        <attr name="hl_shadowLimit" format="dimension" />
+        <attr name="hl_shadowColor" format="color" />
+        <attr name="hl_shadowBackColor" format="color" />
+        <!--x轴的偏移量-->
+        <attr name="hl_dx" format="dimension" />
+        <!--y轴的偏移量-->
+        <attr name="hl_dy" format="dimension" />
+        <!--左边是否显示阴影-->
+        <attr name="hl_leftShow" format="boolean" />
+        <!--右边是否显示阴影-->
+        <attr name="hl_rightShow" format="boolean" />
+        <!--上边是否显示阴影-->
+        <attr name="hl_topShow" format="boolean" />
+        <!--下面是否显示阴影-->
+        <attr name="hl_bottomShow" format="boolean" />
+
+    </declare-styleable>
+
+</resources>

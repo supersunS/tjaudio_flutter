@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="uk.co.senab.photoview">
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+    <uses-permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    tools:ignore="ProtectedPermissions" />
+    <!--remove lock-->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+
+
+
+    <application>
+
+        <!-- 图片浏览页面 -->
+
+
+
+             <!--MusicService-->
+        <service
+            android:name="com.tojoy.musicplayer.service.MusicPlayerService"
+            android:exported="true" />
+
+           </application>
+
+</manifest>

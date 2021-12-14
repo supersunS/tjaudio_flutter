@@ -1,18 +1,41 @@
 buildscript {
     repositories {
+        // 镜像下载不下来时可以启用
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public'}
+
         google()
+        jcenter()
+        maven { url 'https://dl.bintray.com/tencentqcloudterminal/maven' }
         mavenCentral()
+
+        maven {url 'http://developer.huawei.com/repo/'}
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:4.1.3'
     }
 }
 
 allprojects {
     repositories {
+
+        // 镜像下载不下来时可以启用
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://maven.aliyun.com/repository/public'}
         google()
+        jcenter()
+        maven { url 'https://dl.bintray.com/tencentqcloudterminal/maven' }
+        maven {url 'https://jitpack.io/'}
+        maven {url 'http://developer.huawei.com/repo'}
+        maven {url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"} //个推库
+        maven {
+            url "http://mvn.gt.getui.com/nexus/content/repositories/releases/"
+        }
         mavenCentral()
+
+        maven {url 'http://developer.huawei.com/repo/'}
+
     }
 }
 

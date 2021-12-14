@@ -173,8 +173,10 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
                             child:Offstage(
                               offstage: this._audioPlayStates == false,
                               child: (_audio_state_icon != null
-                                  ? Image.memory(_audio_state_icon!)
+                                  ? Image.memory(
+                                  _audio_state_icon! )
                                   : Image.network("")),
+
                             ),
                           ),
                         ),

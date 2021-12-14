@@ -1,0 +1,575 @@
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in D:\android-sdk-windows/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the proguardFiles
+# directive in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+# copyright chengyanfang
+
+#-----------------------------------------------------------------------------------------------------
+#------------------------------------------基本不用动区域---------------------------------------------
+#-----------------------------------------------------------------------------------------------------
+
+#---------------------------------基本指令区-----------------------
+-optimizationpasses 5
+-dontpreverify
+-verbose
+-dontskipnonpubliclibraryclassmembers
+-dontusemixedcaseclassnames
+-printmapping proguardMapping.txt
+-optimizations !code/simplification/cast,!field/*,!class/merging/*
+-keepattributes *Annotation*,InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+
+#---------------------------------默认保留区------------------------
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.support.multidex.MultiDexApplication
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.view.View
+-keep public class com.android.vending.licensing.ILicensingService
+-keep class android.support.** {*;}
+-keep public class * extends android.support.v4.**
+
+##---------------------------------natvie---------------------------
+-keep public class * extends android.view.View{
+    *** get*();
+    void set*(***);
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+-keep class **.R$* {
+ *;
+}
+
+-keepclassmembers class * {
+    void *(*Event);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keep public class com.tjoy.tjoycloud.R$*{
+    public static final int *;
+}
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+
+##---------------------------------Parcelable-----------------------------
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+#---------------------------------webview---------------------------------
+-keepclassmembers class fqcn.of.javascript.interface.for.Webview {
+   public *;
+}
+-keepclassmembers class * extends android.webkit.WebViewClient {
+    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
+    public boolean *(android.webkit.WebView, java.lang.String);
+}
+-keepclassmembers class * extends android.webkit.WebViewClient {
+    public void *(android.webkit.WebView, jav.lang.String);
+}
+
+#---------------------------------实体类---------------------------------
+-keep class com.tjoy.tjoycloud.** { *; }
+
+
+#---------------------------------Support Vx ---------------------------------
+# support-v4
+#https://stackoverflow.com/questions/18978706/obfuscate-android-support-v7-widget-gridlayout-issue
+-dontwarn android.support.v4.**
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class android.support.v4.** { *; }
+-keep class android.support.v4.** {
+    <fields>;
+    <methods>;
+}
+
+-keep interface  android.support.v4.app.** {
+    <fields>;
+    <methods>;
+}
+
+
+# support-v7
+-dontwarn android.support.v7.**
+-keep class android.support.v7.internal.** { *; }
+-keep interface android.support.v7.internal.** { *; }
+-keep class android.support.v7.** { *; }
+
+# support design
+#@link http://stackoverflow.com/a/31028536
+-dontwarn android.support.design.**
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
+
+
+#-------------------------------------------------------------------------------------------------
+#-----------------------------------------Module--------------------------------------------------
+#-------------------------------------------------------------------------------------------------
+
+#---------------------------------IM-------------------------------
+-dontwarn com.netease.**
+-keep class com.netease.** {*;}
+
+-dontwarn io.netty.**
+-keep class io.netty.** {*;}
+
+#---------------------------------直播----------------------------
+#暂无。。。
+
+#---------------------------------连连支付----------------------------
+-keep public class com.yintong.secure.widget.** {
+    <fields>;
+    <methods>;
+}
+
+-keep class com.yintong.secure.activityproxy.PayIntro$LLJavascriptInterface{*;}
+
+
+#---------------------------------第三方包-------------------------
+#1.微信支付
+-keep class com.tencent.mm.sdk.openapi.WXMediaMessage {*;}
+-keep class com.tencent.mm.sdk.openapi.** implements com.tencent.mm.sdk.openapi.WXMediaMessage$IMediaObject {*;}
+-keep class com.tencent.wxop.** { *; }
+-dontwarn com.tencent.mm.**
+-keep class com.tencent.mm.**{*;}
+-keepclasseswithmembernames class ** {
+}
+-keepattributes Signature
+-keep class sun.misc.Unsafe { *; }
+
+-keep class com.taobao.** {*;}
+-keep class com.alibaba.** {*;}
+-keep class com.alipay.** {*;}
+-dontwarn com.taobao.**
+-dontwarn com.alibaba.**
+-dontwarn com.alipay.**
+
+-keep class com.ut.** {*;}
+-dontwarn com.ut.**
+
+-keep class com.ta.** {*;}
+-dontwarn com.ta.**
+
+-keep class anet.**{*;}
+-keep class org.android.spdy.**{*;}
+-keep class org.android.agoo.**{*;}
+-dontwarn anet.**
+-dontwarn org.android.spdy.**
+-dontwarn org.android.agoo.**
+
+-keep class org.apache.http.**
+-keep interface org.apache.http.**
+-dontwarn org.apache.**
+
+
+#2.小米推送
+-keepclasseswithmembernames class com.xiaomi.**{*;}
+-keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
+-dontwarn com.xiaomi.push.service.b
+-keep class com.peixunfan.trainfans.SystemtService.PushService.XMMessageReceiver {*;}
+-dontwarn com.xiaomi.push.**
+
+#3.华为推送
+-keep class com.huawei.android.pushagent.**{*;}
+-keep class com.huawei.android.pushselfshow.**{*;}
+-keep class com.huawei.hwid.**{*;}
+-keep class com.huawei.deviceCloud.**{*;}
+-keep class com.huawei.android.microkernel.**{*;}
+
+
+#4.okhttp3.x
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *;}
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.{*;}
+
+#5.nineoldandroids-2.4.0.jar
+-keep public class com.nineoldandroids.** {*;}
+
+
+#6.retrofit
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-dontwarn okio.**
+
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+#7.recyclerview-animators
+-keep class jp.wasabeef.** {*;}
+-dontwarn jp.wasabeef.*
+
+#8.multistateview
+-keep class com.kennyc.view.** { *; }
+-dontwarn com.kennyc.view.*
+
+#9.universal-image-loader 混淆
+-dontwarn com.nostra13.universalimageloader.**
+-keep class com.nostra13.universalimageloader.** { *; }
+
+#11.ButterKnife 7.0
+ -keep class butterknife.** { *; }
+ -dontwarn butterknife.internal.**
+ -keep class **$$ViewBinder { *; }
+ -keepclasseswithmembernames class * {
+  @butterknife.* <fields>;
+ }
+ -keepclasseswithmembernames class * {
+ @butterknife.* <methods>;
+ }
+
+
+#12.eventbus 3.0
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}
+
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+-keepclassmembers class ** {
+public void xxxxxx(**);
+}
+
+
+#13.Gson
+-keep class com.google.gson.** {*;}
+-keep class com.google.**{*;}
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+-keep public class * implements java.io.Serializable {*;}
+
+
+#14.Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+#15.GreenDao
+-keep class de.greenrobot.dao.** {*;}
+-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
+    public static Java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+
+#16.volley混淆
+-keep class com.android.volley.** {*;}
+-keep class com.android.volley.toolbox.** {*;}
+-keep class com.android.volley.Response$* { *; }
+-keep class com.android.volley.Request$* { *; }
+-keep class com.android.volley.RequestQueue$* { *; }
+-keep class com.android.volley.toolbox.HurlStack$* { *; }
+-keep class com.android.volley.toolbox.ImageLoader$* { *; }
+
+
+#17.fastJson
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }
+
+#18.Lambda表达式
+-keep class java.lang.invoke.** {*;}
+-dontwarn java.lang.invoke.**
+
+
+#19.Rxjava RxAndroid
+-dontwarn rx.*
+-dontwarn sun.misc.**
+
+#20.PersistentCookieJar
+-dontwarn com.franmontiel.persistentcookiejar.**
+-keep class com.franmontiel.persistentcookiejar.**
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+#21.banner
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keep class com.youth.banner.** {
+    *;
+}
+
+#22.buggly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+
+#23.Fresco
+-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+-keep @com.facebook.common.internal.DoNotStrip class *
+-keepclassmembers class * {
+    @com.facebook.common.internal.DoNotStrip *;
+}
+-keepclassmembers class * {
+    native <methods>;
+}
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn okhttp3.**
+-dontwarn javax.annotation.**
+-dontwarn com.android.volley.toolbox.**
+-dontwarn com.facebook.infer.**
+
+#24.butterknife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+
+#SuperID
+#由*郭宇翔*贡献混淆代码
+#作者Github地址：https://github.com/yourtion
+-keep class **.R$* {*;}
+-keep class com.isnc.facesdk.aty.**{*;}
+-keep class com.isnc.facesdk.**{*;}
+-keep class com.isnc.facesdk.common.**{*;}
+-keep class com.isnc.facesdk.net.**{*;}
+-keep class com.isnc.facesdk.view.**{*;}
+-keep class com.isnc.facesdk.viewmodel.**{*;}
+-keep class com.matrixcv.androidapi.face.**{*;}
+
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+-keep class com.netease.**{*;}
+-keep class org.json.**{*;}
+
+-dontwarn org.**
+-dontwarn com.google.vrtoolkit.**
+-dontwarn com.huawei.**
+-dontwarn freemarker.**
+-keep class com.umeng.commonsdk.** {*;}
+
+#---------友盟-----------------
+-dontwarn com.taobao.**
+-dontwarn anet.channel.**
+-dontwarn anetwork.channel.**
+-dontwarn org.android.**
+-dontwarn org.apache.thrift.**
+-dontwarn com.xiaomi.**
+-dontwarn com.huawei.**
+-dontwarn com.meizu.**
+-dontwarn com.umeng.**
+-keepattributes *Annotation*
+-keep class com.taobao.** {*;}
+-keep class org.android.** {*;}
+-keep class anet.channel.** {*;}
+-keep class com.umeng.** {*;}
+-keep class com.xiaomi.** {*;}
+-keep class com.huawei.** {*;}
+-keep class com.meizu.** {*;}
+-keep class org.apache.thrift.** {*;}
+-keep class com.alibaba.sdk.android.**{*;}
+-keep class com.ut.**{*;}
+-keep class com.ta.**{*;}
+-keep public class **.R$*{
+   public static final int *;
+}
+
+#（可选）避免Log打印输出
+-assumenosideeffects class android.util.Log {
+   public static *** v(...);
+   public static *** d(...);
+   public static *** i(...);
+   public static *** w(...);
+ }
+
+#---------------------极光推送-------------------------
+ -dontoptimize
+ -dontpreverify
+
+ -dontwarn cn.jpush.**
+ -keep class cn.jpush.** { *; }
+ -keep class * extends cn.jpush.android.helpers.JPushMessageReceiver { *; }
+
+ -dontwarn cn.jiguang.**
+ -keep class cn.jiguang.** { *; }
+
+ #==================gson && protobuf==========================
+ -dontwarn com.google.**
+ -keep class com.google.gson.** {*;}
+ -keep class com.google.protobuf.** {*;}
+
+#-----------------------
+
+-dontwarn com.alibaba.**
+-keep class com.alibaba.**
+-keepclassmembers class com.alibaba.** {
+    *;
+}
+-keep class com.taobao.**
+-keepclassmembers class com.taobao.** {
+    *;
+}
+
+-dontwarn com.google.common.**
+-dontwarn com.fasterxml.jackson.**
+-dontwarn com.amap.api.**
+-dontwarn net.jcip.annotations.**
+
+-keepattributes Annotation,EnclosingMethod,Signature
+-keep class com.fasterxml.jackson.**
+-keepclassmembers class com.fasterxml.jackson.** {
+    *;
+}
+
+-keep class org.apache.http.**
+-keep class java.lang.invoke.**
+-keep class com.duanqu.**
+-keepclassmembers class com.duanqu.** {
+    *;
+}
+
+
+#===================== 视频播放===============
+-keep class tv.danmaku.ijk.media.**{*;}
+
+-dontwarn com.duanqu.**
+-keep class com.duanqu.** {*;}
+
+-dontwarn com.mengzhu.core.**
+-dontwarn com.tencent.smtt.**
+
+#==================== 信鸽推送==============
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep class com.tencent.android.tpush.** {* ;}
+-keep class com.tencent.mid.** {* ;}
+-keep class com.qq.taf.jce.** {*;}
+-keep class com.tencent.bigdata.** {* ;}
+
+#华为通道
+-ignorewarnings
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hianalytics.android.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
+
+#小米通道
+-keep class com.xiaomi.**{*;}
+-keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
+
+
+#阿里云
+-keep class com.alibaba.sdk.android.oss.** { *; }
+-dontwarn okio.**
+-dontwarn org.apache.commons.codec.binary.**
+
+#魅族通道
+-dontwarn com.meizu.cloud.pushsdk.**
+-keep class com.meizu.cloud.pushsdk.**{*;}
+

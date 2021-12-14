@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- session -->
+
+    <dimen name="yms_dimens_50.0_px">25.0dp</dimen>
+    <string name="string_count">%1$s/%2$s</string>
+    <string name="Playback_failed">播放失败</string>
+    <item name="item_image_key" type="id" />
+    <string name="text_dialog_title">提示</string>
+    <string name="newwork_error_tip">似乎已断开与互联网的连接</string>
+</resources>

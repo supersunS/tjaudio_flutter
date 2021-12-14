@@ -36,11 +36,19 @@ class TjaudioFlutter {
     _messageChannel.send({"methode":"show"});
   }
 
+  static void showNative(){
+    _messageChannel.send({"methode":"showNative"});
+  }
+
   static Future<bool> playWithModel(TJMediaBackGroundModel model) async{
     Map result = await _messageChannel.send({"methode":"playWithModel","arguments":model.toJsonString()}) as Map;
     return result["result"] as bool;
   }
 
+  static Future<bool> playWithIndex(int index) async {
+    Map result = await _messageChannel.send({"methode":"playWithIndex","arguments":index}) as Map;
+    return result["result"] as bool;
+  }
 
   static void pause(){
     var result = _messageChannel.send({"methode":"pause"});

@@ -40,6 +40,10 @@ class TJAudioPlayViewManager {
     this.isShow = true;
   }
 
+  void _showNative(){
+    TjaudioFlutter.showNative();
+  }
+
   Future<bool> _playWithModel(TJMediaBackGroundModel model) async {
     if (this._cacheNewAudioSourceData != null) {
       if (this._cacheNewAudioSourceData.length != 0) {
@@ -59,6 +63,10 @@ class TJAudioPlayViewManager {
       this._cacheNewAudioSourceData = [];
     }
     return TjaudioFlutter.playWithModel(model);
+  }
+
+  Future<bool> _playWithIndex(int index) async {
+    return TjaudioFlutter.playWithIndex(index);
   }
 
   Future<List<TJMediaBackGroundModel>> _getAudioSourceData() async {
@@ -108,6 +116,7 @@ class TJAudioPlayViewManager {
     TjaudioFlutter.nextAudio();
   }
 
+
   //=====================================================================================
 
   /// default NO
@@ -124,8 +133,16 @@ class TJAudioPlayViewManager {
     TJAudioPlayViewManager._instance._show();
   }
 
+  static void showNative(){
+    TJAudioPlayViewManager._instance._showNative();
+  }
+
   static Future<bool> playWithModel(TJMediaBackGroundModel model) async {
     return TJAudioPlayViewManager._instance._playWithModel(model);
+  }
+
+  static Future<bool> playWithIndex(int index) async {
+    return TJAudioPlayViewManager._instance._playWithIndex(index);
   }
 
   static Future<List<TJMediaBackGroundModel>> getAudioSourceData() async {

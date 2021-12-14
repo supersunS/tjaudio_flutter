@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_27"
+    android:layout_height="@dimen/dp_27"
+    android:id="@+id/rl_progress_main">
+
+    <LinearLayout android:id="@+id/rl_music_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:background="@drawable/shape_music_player_indicator_bg"
+        android:visibility="visible">
+        <View android:id="@+id/indicator01"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_3"
+            android:layout_marginLeft="@dimen/dp_1"
+            android:background="@drawable/shape_music_indicator_bg">
+        </View>
+        <View android:id="@+id/indicator02"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_6"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:background="@drawable/shape_music_indicator_bg">
+        </View>
+        <View android:id="@+id/indicator03"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_12"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:background="@drawable/shape_music_indicator_bg">
+        </View>
+        <View android:id="@+id/indicator04"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_6"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:background="@drawable/shape_music_indicator_bg">
+        </View>
+        <View android:id="@+id/indicator05"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="@dimen/dp_3"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:background="@drawable/shape_music_indicator_bg">
+        </View>
+    </LinearLayout>
+</RelativeLayout>
