@@ -971,7 +971,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
                         if (null != mMediaPlayer || mMusicPlayerState == MusicConstants.MUSIC_PLAYER_PAUSE
                                 || isPlaying()) {
                             //+500毫秒是因为1秒一次的播放进度回显，格式化分秒后显示有时候到不了终点时间
-                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.getDuration(),
+                            onPlayerEventListener.onTaskRuntime(mMediaPlayer.isPlaying()?mMediaPlayer.getDuration():0,
                                     mMediaPlayer.getCurrentPosition() + 500, mBufferProgress);
                         } else {
                             onPlayerEventListener.onTaskRuntime(0, 0, mBufferProgress);
@@ -1603,7 +1603,7 @@ public class MusicPlayerService extends Service implements MusicPlayerPresenter,
         MusicPlayerService.this.mMusicPlayerState = MusicConstants.MUSIC_PLAYER_PLAYING;
         if (null != mOnPlayerEventListeners) {
             for (MusicPlayerEventListener onPlayerEventListener : mOnPlayerEventListeners) {
-                onPlayerEventListener.onPrepared(mediaPlayer.getDuration());
+                onPlayerEventListener.onPrepared(mediaPlayer.isPlaying()?mediaPlayer.getDuration():0);
                 onPlayerEventListener.onMusicPlayerState(mMusicPlayerState, "播放中");
             }
         }

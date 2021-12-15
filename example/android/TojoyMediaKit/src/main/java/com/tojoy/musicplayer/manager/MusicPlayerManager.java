@@ -1003,6 +1003,7 @@ public final class  MusicPlayerManager implements MusicPlayerPresenter {
         public void onServiceConnected(ComponentName name, IBinder service) {
             if (null != service) {
                 if(service instanceof MusicPlayerBinder){
+                    LogUtil.d(MusicPlayerManager.TAG,"服务开启返回binder对象");
                     mBinder = (MusicPlayerBinder) service;
                     //初始化配置
                     mBinder.setPlayInfoListener(mTempInfoListener);

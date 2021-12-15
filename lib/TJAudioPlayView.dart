@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tjaudio_flutter/TJAudioPlayStateView.dart';
 import 'package:tjaudio_flutter/TJMediaBackGroundModel.dart';
-
 import 'TJAudioPlayViewManager.dart';
 
 class _TJAudioPlayView extends State<TJAudioPlayView>

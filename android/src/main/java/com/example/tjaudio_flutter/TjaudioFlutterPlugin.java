@@ -4,6 +4,9 @@ package com.example.tjaudio_flutter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,6 +57,30 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+        //音乐播放器配置
+        MusicPlayerConfig config = MusicPlayerConfig.Build()
+                //设置默认的闹钟定时关闭模式，优先取用户设置
+                .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
+                //设置默认的循环模式，优先取用户设置
+                .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
+        //音乐播放器初始化
+        MusicPlayerManager.getInstance()
+                //内部存储初始化
+                .init(BaseLibKit.getContext())
+                //应用播放器配置
+                .setMusicPlayerConfig(config)
+                //通知栏交互，默认开启
+                .setNotificationEnable(true)
+                //常驻进程开关，默认开启
+                .setLockForeground(true)
+                .setPlayInfoListener(new MusicPlayerInfoListener() {
+                    //此处自行存储播放记录
+                    @Override
+                    public void onPlayMusiconInfo(AudioInfo musicInfo, int position) {
+                    }
+                })
+                //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
+                .initialize(BaseLibKit.getContext());
         _messagechannel = new BasicMessageChannel(flutterPluginBinding.getBinaryMessenger(), CHANNEL_NAME_message, StandardMessageCodec.INSTANCE);
         _messagechannel.setMessageHandler(new BasicMessageChannel.MessageHandler() {
             @Override
@@ -85,29 +112,7 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                     }
 
                 } else if (methode.equals("openBackGround")) {
-                    //音乐播放器配置
-                    MusicPlayerConfig config = MusicPlayerConfig.Build()
-                            //设置默认的闹钟定时关闭模式，优先取用户设置
-                            .setDefaultAlarmModel(MusicConstants.MUSIC_ALARM_MODEL_0)
-                            //设置默认的循环模式，优先取用户设置
-                            .setDefaultPlayModel(MusicConstants.MUSIC_MODEL_LOOP);
-                    //音乐播放器初始化
-                    MusicPlayerManager.getInstance()
-                            //内部存储初始化
-                            .init(BaseLibKit.getContext())
-                            //应用播放器配置
-                            .setMusicPlayerConfig(config)
-                            //通知栏交互，默认开启
-                            .setNotificationEnable(Boolean.valueOf(arguments.toString()))
-                            //常驻进程开关，默认开启
-                            .setLockForeground(true)
-                            .setPlayInfoListener(new MusicPlayerInfoListener() {
-                                //此处自行存储播放记录
-                                @Override
-                                public void onPlayMusiconInfo(AudioInfo musicInfo, int position) { }
-                            })
-                            //重载方法，初始化音频媒体服务,成功之后如果系统还在播放音乐，则创建一个悬浮窗承载播放器
-                            .initialize(BaseLibKit.getContext());
+
                 } else if (methode.equals("playWithIndex")) {
                     MusicPlayerManager.getInstance().startPlayMusic(Integer.valueOf(arguments.toString()));
                     Map<String, Boolean> resultMap = new HashMap<>();
@@ -148,7 +153,12 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
                     MusicPlayerManager.getInstance().addOnPlayerEventListener(new MusicPlayerEventListener() {
                         @Override
                         public void onMusicPlayerState(int playerState, String message) {
-                            Log.d("~~~~","playerState"+ String.valueOf(playerState));
+                            Map<String, Boolean> resultMap = new HashMap<>();
+                            resultMap.put("audioState", playerState == 4);
+
+                            Message message1 = new Message();
+                            message1.obj = resultMap;
+                            handler.sendMessage(message1);
                         }
 
                         @Override
@@ -173,10 +183,19 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
 
                         @Override
                         public void onTaskRuntime(long totalDurtion, long currentDurtion, int bufferProgress) {
-                            Log.d("~~~~","bufferProgress"+ String.valueOf(bufferProgress));
-                            Log.d("!!!!","currentDurtion"+ String.valueOf(currentDurtion/totalDurtion));
-                        }
 
+                            Float progress = 0f;
+                            if (totalDurtion > 0) {
+                                progress = Float.valueOf(currentDurtion) / Float.valueOf(totalDurtion);
+                            }
+                            Map<String, Float> resultMap = new HashMap<>();
+                            resultMap.put("progress", progress);
+
+                            Message message1 = new Message();
+                            message1.obj = resultMap;
+                            handler.sendMessage(message1);
+
+                        }
                     });
                 }
             }
@@ -195,7 +214,15 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             }
         });
     }
+    // 子线程
+    Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
 
+            _eventSink.success(msg.obj);
+        }
+    };
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("getPlatformVersion")) {
@@ -230,22 +257,27 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
         return out.toByteArray();
     }
 
-    private void startTimer(){
-        if(_timer != null || _timerTask != null){
+    private void startTimer() {
+        if (_timer != null || _timerTask != null) {
             cancelTimer();
         }
+
         _timer = new Timer();
         _timerTask = new TimerTask() {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                MusicPlayerManager.getInstance().onCheckedCurrentPlayTask();
+                if (MusicPlayerManager.getInstance().isPlaying()) {
+                    MusicPlayerManager.getInstance().onCheckedCurrentPlayTask();
+                }
             }
         };
-        _timer.schedule(_timerTask,500L,500L);
+        _timer.schedule(_timerTask, 500L, 500L);
+
     }
-    private void cancelTimer(){
-        if(_timer != null || _timerTask != null){
+
+    private void cancelTimer() {
+        if (_timer != null || _timerTask != null) {
             _timerTask.cancel();
             _timer.cancel();
             _timerTask = null;
