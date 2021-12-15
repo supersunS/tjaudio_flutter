@@ -214,6 +214,7 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             }
         });
     }
+
     // 子线程
     Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -223,6 +224,7 @@ public class TjaudioFlutterPlugin implements FlutterPlugin, MethodCallHandler {
             _eventSink.success(msg.obj);
         }
     };
+
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("getPlatformVersion")) {
