@@ -10,7 +10,10 @@ class _TJAudioPlayStateView extends State<TJAudioPlayStateView> {
       child: new Container(
         width: 36,
         height: 36,
-        color: Color.fromRGBO(255, 255, 255, 0),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(48, 114, 246, 1),
+          borderRadius: BorderRadius.circular(18),
+        ),
         child: Stack(
           children: [
             TJAudioPlayLineWidget(
@@ -135,7 +138,7 @@ class _TJAudioPlayLineWidget extends State<TJAudioPlayLineWidget>
         width: this.widget.width,
         height: _animation.value,
         decoration: BoxDecoration(
-          color: Color.fromRGBO(48, 114, 246, 1),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(1),
         ),
       ),

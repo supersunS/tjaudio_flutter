@@ -11,7 +11,7 @@ class _TJAudioPlayView extends State<TJAudioPlayView>
     with SingleTickerProviderStateMixin {
   final double _kBottomPadding = 88.0; //距顶部的偏移
   final double _kDefaultWidth = 48.0; //距底部
-  final double _kDefaultMAXWidth = 200.0; //距底部
+  final double _kDefaultMAXWidth = 210.0; //距底部
   bool _isOpen = false;
   int _sourceCount = 0;
   double _ScreenWidth = 0.0;
